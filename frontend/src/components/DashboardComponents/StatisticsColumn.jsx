@@ -1,15 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import WelcomeImg from '../../assets/WelcomeImg.png';
-import { Kanban, Mail, MessageSquare, Presentation} from 'lucide-react';
-import AddPostModal from './AddPostModal';
-import { useContext } from 'react';
+import { Kanban, Mail, MessageSquare, Presentation } from 'lucide-react';
 import UserContext from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 const StatisticsColumn = () => {
-  const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const username= user?.username||"Guest";
+  const userId = user?.id || '';
+  const notification = user?.notification || [];
+  const username = user?.username || "Guest";
+  const navigate = useNavigate();
+
+  const [stats, setStats] = useState({
+    totalProjects: 0,
+    currentProjects: 0,
+    totalIssues: 0,
+  });
+
+  useEffect(() => {
+    if (!userId) return;
+
+    fetch('http://localhost:8000/projects/my-projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user: userId }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const totalProjects = data.length;
+        const currentProjects = data.filter(p => p.projectstatus !== 'completed').length;
+
+        let totalIssues = 0;
+        data.forEach(project => {
+          ['todo', 'onprogress', 'review'].forEach(section => {
+            totalIssues += Array.isArray(project[section]) ? project[section].length : 0;
+          });
+        });
+
+        setStats({ totalProjects, currentProjects, totalIssues });
+      })
+      .catch(err => console.error('Error:', err));
+  }, [userId]);
+
+  const handleAddPost = () => {
+    // Define what this does or add AddPostModal here
+    console.log("Add post triggered");
+  };
+
   return (
     <div className="welcome w-full h-full col-span-3">
       <div className="feed-Request flex items-center justify-between w-[95%] min-h-[40vh] max-h-fit rounded-lg mx-4 bg-neutral-50 hover:bg-neutral-100 duration-300 shadow-md p-6">
@@ -32,64 +69,64 @@ const StatisticsColumn = () => {
         <img src={WelcomeImg} className="w-[35%] h-auto max-w-xs rounded-lg" alt="Welcome" />
       </div>
 
-      <div className="w-[95%] grid mx-auto grid-cols-1 md:grid-cols-3  gap-4 p-4">
+      <div className="w-[95%] grid mx-auto grid-cols-1 md:grid-cols-3 gap-4 p-4">
         <div className="space-y-3">
           <div className="m-1">
             <div className="bg-green-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md">
-              <div className="w-fit max-w-10 wrap px-2 py-1 flex items-center justify-center bg-green-500 text-white text-sm font-bold rounded-full">
-                10
+              <div className="px-2 py-1 flex items-center justify-center bg-green-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+                {stats.totalProjects}
               </div>
               <div className="text-sm ml-3">Total Projects</div>
             </div>
           </div>
           <div className="m-1">
             <div className="bg-sky-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md">
-              <div className="w-fit max-w-10 wrap px-2 py-1 flex items-center justify-center bg-sky-500 text-white text-sm font-bold rounded-full">
-                07
+              <div className="px-2 py-1 flex items-center justify-center bg-sky-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+                {stats.currentProjects}
               </div>
               <div className="text-sm ml-3">Current Projects</div>
             </div>
           </div>
           <div className="m-1">
             <div className="bg-red-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md">
-              <div className="w-fit max-w-10 wrap px-2 py-1 flex items-center justify-center bg-red-500 text-white text-sm font-bold rounded-full">
-                20
+              <div className="px-2 py-1 flex items-center justify-center bg-red-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+                {stats.totalIssues}
               </div>
               <div className="text-sm ml-3">Total Issues</div>
             </div>
           </div>
           <div className="m-1">
             <div className="bg-orange-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md">
-              <div className="w-fit max-w-10 wrap px-2 py-1 flex items-center justify-center bg-orange-500 text-white text-sm font-bold rounded-full">
-                99
+              <div className="px-2 py-1 flex items-center justify-center bg-orange-500 min-w-[30px] text-white text-sm font-bold rounded-full">
+                {notification.length}
               </div>
               <div className="text-sm ml-3">Notifications</div>
             </div>
           </div>
         </div>
+
         <div className='col-span-2 my-auto'>
-            <p className='text-center text-xl font-bold my-4'>Quick Links</p>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <p className='text-center text-xl font-bold my-4'>Quick Links</p>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div className='action-item flex flex-col items-center gap-2 p-3 bg-red-50 shadow-md rounded-lg cursor-pointer hover:bg-red-100 duration-300'>
-                <Mail size={24} className='text-red-600' />
-                <span className='font-semibold text-sm'>Send Mail</span>
+              <Mail size={24} className='text-red-600' />
+              <span className='font-semibold text-sm'>Send Mail</span>
             </div>
-            <div className='action-item flex flex-col items-center gap-2 p-3 bg-purple-50 shadow-md rounded-lg cursor-pointer hover:bg-purple-100 duration-300' onClick={()=>{navigate('/projects')}}>
-                <Kanban size={24} className='text-purple-600' />
-                <span className='font-semibold text-sm'>Board</span>
+            <div className='action-item flex flex-col items-center gap-2 p-3 bg-purple-50 shadow-md rounded-lg cursor-pointer hover:bg-purple-100 duration-300' onClick={() => navigate('/projects')}>
+              <Kanban size={24} className='text-purple-600' />
+              <span className='font-semibold text-sm'>Board</span>
             </div>
-            <div className='action-item flex flex-col items-center gap-2 p-3 bg-yellow-50 shadow-md rounded-lg cursor-pointer hover:bg-yellow-100 duration-300' onClick={()=>{handleAddPost()}}>
-                <MessageSquare size={24} className='text-yellow-600' />
-                <span className='font-semibold text-sm'>Add Post</span>
+            <div className='action-item flex flex-col items-center gap-2 p-3 bg-yellow-50 shadow-md rounded-lg cursor-pointer hover:bg-yellow-100 duration-300' onClick={handleAddPost}>
+              <MessageSquare size={24} className='text-yellow-600' />
+              <span className='font-semibold text-sm'>Add Post</span>
             </div>
             <div className='action-item flex flex-col items-center gap-2 p-3 bg-pink-50 shadow-md rounded-lg cursor-pointer hover:bg-pink-100 duration-300'>
-                <Presentation size={24} className='text-pink-600' />
-                <span className='font-semibold text-sm'>Discuss</span>
+              <Presentation size={24} className='text-pink-600' />
+              <span className='font-semibold text-sm'>Discuss</span>
             </div>
-            </div>
+          </div>
         </div>
       </div>
-      {/* <AddModal/> */}
     </div>
   );
 };

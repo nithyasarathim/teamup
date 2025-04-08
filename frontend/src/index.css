@@ -77,4 +77,6 @@
     display: none;
 }
 
-  
+.kanban-column::-webkit-scrollbar{
+    display: none;
+}

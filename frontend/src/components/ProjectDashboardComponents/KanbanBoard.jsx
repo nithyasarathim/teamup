@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import UserContext from '../../context/UserContext';
+import UserContext from '../../Context/UserContext';
 
 const KanbanBoard = ({ data, onUpdateColumns }) => {
   const { user } = useContext(UserContext);
@@ -32,7 +32,6 @@ const KanbanBoard = ({ data, onUpdateColumns }) => {
     const destCol = destination.droppableId;
     const draggedTask = columns[sourceCol][source.index];
 
-    // Only allow drag if it's the user's task
     if (draggedTask.teamMemberID !== userId) return;
 
     if (sourceCol === destCol) {
@@ -60,7 +59,7 @@ const KanbanBoard = ({ data, onUpdateColumns }) => {
   const columnOrder = ['To Do', 'Under Progress', 'Review', 'Done'];
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-6 min-h-screen ">
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {columnOrder.map((columnKey) => {
@@ -76,7 +75,7 @@ const KanbanBoard = ({ data, onUpdateColumns }) => {
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`p-4 rounded-xl shadow-md min-h-[500px] transition-colors duration-300 ${
+                    className={`p-4 kanban-column rounded-xl shadow-md min-h-[500px] overflow-y-auto max-h-[500px] transition-colors duration-300 ${
                       snapshot.isDraggingOver ? 'bg-opacity-70' : ''
                     } ${bgColor}`}
                   >

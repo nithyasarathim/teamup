@@ -121,9 +121,44 @@ const ListProjects = async (req, res) => {
   }
 };
 
+const updateProjectInfo = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const {
+      projectStatus,
+      projectLink,
+      prototypeLink,
+      referenceLink,
+      skillsRequired,
+      rolesRequired
+    } = req.body;
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const updateData = {};
+    if (projectStatus) updateData.projectStatus = projectStatus;
+    if (projectLink) updateData.projectLink = projectLink;
+    if (prototypeLink) updateData.prototypeLink = prototypeLink;
+    if (referenceLink) updateData.referenceLink = referenceLink;
+    if (skillsRequired) updateData.skills = skillsRequired;
+    if (rolesRequired) updateData.roles = rolesRequired;
+
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { $set: updateData },
+      { new: true }
+    );
+
+    return res.status(200).json({ message: "Project updated successfully", project: updatedProject });
+  } catch (error) {
+    console.error("Update Project Info Error:", error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
 
 
-
-
-module.exports = { createProject, getMyProjects, fetchProject, updateProjectTasks, addTasks, ListProjects };
+module.exports = { createProject, getMyProjects, fetchProject, updateProjectTasks, addTasks, ListProjects, updateProjectInfo };
 

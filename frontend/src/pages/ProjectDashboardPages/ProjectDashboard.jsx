@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import KanbanBoard from './KanbanBoard';
+import KanbanBoard from '../../components/ProjectDashboardComponents/KanbanBoard';
 import Header from '../../components/Header';
-import DashboardHeader from './DashboardHeader';
+import DashboardHeader from '../../components/ProjectDashboardComponents/DashboardHeader';
 import { useParams } from 'react-router-dom';
 
 const ProjectDashboard = () => {
