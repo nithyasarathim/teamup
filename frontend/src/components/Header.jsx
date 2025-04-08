@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState , useContext } from 'react';
 import { Home, List, User, Users, Building, BellDot, X , SquareKanban, SquareMousePointer, LayoutList, LayoutDashboard } from 'lucide-react';
 import Logo from '../assets/logo.png';
+import  userContext  from '../Context/UserContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Profile from '../assets/default.jpg';
 
 const Header = () => {
+  const { user } = useContext(userContext);
   const navigate= useNavigate();
   const [isListOpen, setListOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
   const location= useLocation();
+  console.log(user);
   return (
     <div className='justify-between flex items-center p-4 relative'>
       <img src={Logo} alt='Logo' className='h-11 m-0' />
@@ -46,7 +51,37 @@ const Header = () => {
           <div className='w-[25%] min-w-[350px] h-full bg-white p-4 shadow-lg fixed right-0 top-0 flex flex-col gap-4 z-50'>
             <X size={24} className='cursor-pointer self-end' onClick={() => setNotificationOpen(false)} />
             <h2 className='text-lg font-semibold'>Notifications</h2>
-            <div className='text-sm text-gray-500'>No new notifications</div>
+            {user.notifications && user.notifications.length > 0 ? (
+  <div className='flex flex-col gap-2 overflow-y-auto'>
+    {user.notifications.map((note, index) => {
+      let parsed;
+      try {
+        parsed = JSON.parse(note);
+      } catch (e) {
+        parsed = note;
+      }
+      return (
+        <div key={index} className='p-3 border rounded bg-gray-100'>
+          <p className='text-sm font-medium text-black mb-2'>
+            <span className='text-sky-600 font-semibold'>{parsed.username}</span> wants to contribute to the {parsed.projectName} <span className='text-blue-600 font-semibold'>{parsed.projectName}</span>. Would you like to accept?
+          </p>
+          <div className='flex gap-3'>
+            <button className='bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded'>
+              Accept
+            </button>
+            <button className='bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded'>
+              Decline
+            </button>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+) : (
+  <div className='text-sm text-gray-500'>No new notifications</div>
+)}
+
+
           </div>
         </div>
       )}
@@ -60,7 +95,7 @@ const Header = () => {
           </div>
         </div>
       )}
-    </div>
+    </div>  
   );
 };
 

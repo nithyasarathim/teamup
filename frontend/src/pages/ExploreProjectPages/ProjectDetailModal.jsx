@@ -13,17 +13,40 @@ const ProjectDetailModal = ({ project, onClose }) => {
     navigate(`/profile/${project?.teamLeadName?.toLowerCase().replaceAll(" ", "-")}`);
   };
 
-  const handleAskToJoin = () => {
+  const handleAskToJoin = async () => {
     if (!selectedRole) {
-      alert("Please select a role before joining!");
+      toast.warn("Please select a role before joining!");
       return;
     }
-    console.log("Project id :", project._id);
-    console.log("User:", user.username);
-    console.log("User ID:", user.id);
-    console.log("Team Lead ID:", project.teamLeadId);
-    console.log("Selected Role:", selectedRole);
+    console.log(project);
+  
+    const payload = {
+      projectName: project.projectName,
+      projectId: project._id,
+      userId: user?.id|| "",
+      username: user?.name || "",
+      teamLeadId: project.teamLeadId,
+      role: selectedRole,
+    };
+  
+    try {
+      const response = await fetch('http://localhost:8000/notify/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) throw new Error("Request failed");
+  
+      alert("Request sent successfully!");
+    } catch (error) {
+      console.error("Error sending request:", error);
+      alert("Failed to send request. Try again.");
+    }
   };
+  
 
   return (
     <AnimatePresence>
@@ -149,7 +172,6 @@ const ProjectDetailModal = ({ project, onClose }) => {
                   <span className="text-gray-400 italic">No reference link</span>
                 )}
 
-                {/* Role Select and Join Button */}
                 <div className="flex items-center gap-3">
                   <select
                     value={selectedRole}

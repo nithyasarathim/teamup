@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 const StatisticsColumn = () => {
   const { user } = useContext(UserContext);
   const userId = user?.id || '';
-  const notification = user?.notification || [];
   const username = user?.username || "Guest";
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
 
   const [stats, setStats] = useState({
     totalProjects: 0,
@@ -42,8 +42,19 @@ const StatisticsColumn = () => {
       .catch(err => console.error('Error:', err));
   }, [userId]);
 
+  useEffect(() => {
+    if (!userId) return;
+  
+    fetch(`http://localhost:8000/notify/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setNotifications(data || []);
+      })
+      .catch(err => console.error('Error fetching notifications:', err));
+  }, [userId]);
+  
+
   const handleAddPost = () => {
-    // Define what this does or add AddPostModal here
     console.log("Add post triggered");
   };
 
@@ -98,7 +109,7 @@ const StatisticsColumn = () => {
           <div className="m-1">
             <div className="bg-orange-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md">
               <div className="px-2 py-1 flex items-center justify-center bg-orange-500 min-w-[30px] text-white text-sm font-bold rounded-full">
-                {notification.length}
+                {notifications.length}
               </div>
               <div className="text-sm ml-3">Notifications</div>
             </div>

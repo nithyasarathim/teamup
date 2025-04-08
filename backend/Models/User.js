@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const notificationSchema = new Schema({
+  type: String,
+  projectId: String,
+  userId: String,
+  username: String,
+  role: String,
+  timestamp: Date,
+});
+
 const userSchema = new Schema(
   {
     username: {
@@ -17,7 +26,7 @@ const userSchema = new Schema(
       default:[],
     },
     notifications: {
-      type: [String], 
+      type: [notificationSchema],
       default: [],
     },
     profilePicture: {

@@ -143,6 +143,8 @@ const login =  async (req, res) => {
             skills: user.skills,
             isVerified: user.isVerified,
             isFaculty: user.isFaculty,
+            notifications: user.notifications,
+            
         };
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.status(200).json({ message: 'Login successful',token });
