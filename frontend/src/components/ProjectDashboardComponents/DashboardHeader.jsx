@@ -39,9 +39,9 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
     }
     window.open(url, '_blank', 'noopener,noreferrer');
   };
- console.log(data);
- console.log(user);
+
   const handleSubmitProjectUpdate = async () => {
+    
     const payload = {
       projectStatus,
       projectLink,
@@ -127,7 +127,6 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
     { value: 'Algorithms', label: 'Algorithms' },
     { value: 'Problem Solving', label: 'Problem Solving' },
   ];
-
   return (
     <div className="w-full bg-white p-4 flex items-center justify-between shadow-sm">
       <h1 className="text-xl font-bold mx-4">
@@ -174,7 +173,7 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
           <Figma size={20} /> Figma
         </div>
 
-        <div className="leader-access flex gap-2 p-2 border border-gray-200 rounded-md bg-gradient-to-r from-sky-50 via-white to-sky-50 shadow-sm">
+        {(data.teamLeadId===user.user.id)&&<div className="leader-access flex gap-2 p-2 border border-gray-200 rounded-md bg-gradient-to-r from-sky-50 via-white to-sky-50 shadow-sm">
           <button
             className="px-4 py-1 bg-sky-100 text-sm text-sky-900 font-medium rounded-lg hover:bg-sky-200 transition-colors duration-200"
             onClick={() => setShowAddTaskModal(true)}
@@ -188,10 +187,10 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
           >
             <Pencil className="text-gray-700" size={18} />
           </button>
-        </div>
+        </div>}
       </div>
 
-      {showAddTaskModal && data.teamLeadId===user.id &&(
+      {showAddTaskModal &&(
         <AddTaskModal data={data} setShowAddTaskModal={setShowAddTaskModal} />
       )}
 
@@ -243,7 +242,6 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
               className="w-full border px-3 py-2 rounded text-sm mb-3"
             />
 
-            {/* React Select Skills */}
             <Select
               isMulti
               name="skills"
@@ -256,7 +254,6 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
               classNamePrefix="select"
             />
 
-            {/* React Select Roles */}
             <Select
               isMulti
               name="roles"
@@ -271,7 +268,7 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
 
             <button
               onClick={handleSubmitProjectUpdate}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-sm"
+              className="w-full bg-sky-500 hover:bg-sky-600 text-white py-2 rounded text-sm"
             >
               Save Changes
             </button>
