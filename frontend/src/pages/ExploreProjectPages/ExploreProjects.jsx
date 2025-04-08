@@ -21,7 +21,7 @@ const ExploreProjects = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({}), // Add payload if your API expects one
+          body: JSON.stringify({}), 
         });
 
         if (!response.ok) throw new Error('Failed to fetch projects');
@@ -55,7 +55,7 @@ const ExploreProjects = () => {
           role.toLowerCase().includes(selectedRole.toLowerCase())
         )
       : true;
-    return matchType && matchSkill && matchRole;
+    return matchType && matchSkill && matchRole && project.teamMembers.length < project.teamSize;
   });
 
   return (
@@ -165,7 +165,7 @@ const ExploreProjects = () => {
                     <td className="py-2 font-medium">Team Size</td>
                     <td className="py-2 text-right flex justify-end gap-2">
                       <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
-                        Needed: {project.roles.length}
+                        Needed: {project.teamSize}
                       </span>
                       <span className="bg-rose-100 text-rose-800 px-2 py-1 rounded-full text-xs font-medium">
                         Available: {project.teamMembers.length}

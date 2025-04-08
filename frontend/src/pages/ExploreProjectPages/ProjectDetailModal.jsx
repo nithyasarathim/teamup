@@ -112,8 +112,6 @@ const ProjectDetailModal = ({ project, onClose }) => {
                 </div>
               </div>
 
-              {/* Current Team */}
-              {/* Current Team */}
               <div className="col-span-2 flex justify-between items-start p-3 rounded-lg">
                 <div className="font-medium">Current Team</div>
                   <div className="flex gap-2 flex-wrap justify-end">
@@ -129,8 +127,6 @@ const ProjectDetailModal = ({ project, onClose }) => {
                   </div>
                 </div>
 
-
-              {/* Button Row: Project Purpose + Ask to Join */}
               <div className="col-span-2 flex justify-between items-center p-3 rounded-lg mt-2">
                 {project.referenceLink ? (
                   <button

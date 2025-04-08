@@ -65,7 +65,7 @@ const MyProjects = ({ refreshTrigger }) => {
                   <tr className="border-t border-gray-200">
                     <td className="py-2 font-medium">Team Lead</td>
                     <td className="py-2 text-right">
-                      <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm font-semibold">
+                      <span className="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-sm font-semibold">
                         {project.teamLeadName}
                       </span>
                     </td>
@@ -73,7 +73,7 @@ const MyProjects = ({ refreshTrigger }) => {
                   <tr className="border-t border-gray-200">
                     <td className="py-2 font-medium">Duration</td>
                     <td className="py-2 text-right">
-                      <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                      <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg text-xs font-medium">
                         {project.projectDuration} months
                       </span>
                     </td>
@@ -81,7 +81,7 @@ const MyProjects = ({ refreshTrigger }) => {
                   <tr className="border-t border-gray-200">
                     <td className="py-2 font-medium">Status</td>
                     <td className="py-2 text-right">
-                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-lg text-xs font-medium">
                         {project.projectStatus}
                       </span>
                     </td>
@@ -89,8 +89,8 @@ const MyProjects = ({ refreshTrigger }) => {
                   <tr className="border-t border-gray-200">
                     <td className="py-2 font-medium">Total Issues</td>
                     <td className="py-2 text-right">
-                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
-                        {totalIssues}
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-lg text-xs font-medium">
+                        {totalIssues} total issues
                       </span>
                     </td>
                   </tr>
