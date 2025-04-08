@@ -1,0 +1,129 @@
+
+const Project = require('../Models/Project');
+const mongoose = require('mongoose');
+
+const createProject = async (req, res) => {
+  try {
+    const newProject = new Project(req.body);
+    const savedProject = await newProject.save();
+    res.status(201).json({ message: "Project created successfully", project: savedProject });
+  } catch (error) {
+    console.error("Create Project Error:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+const getMyProjects = async (req, res) => {
+  try {
+    const user_Id = req.body.user;
+    const projects = await Project.find({"teamMembers.userid": user_Id});
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error("Get My Projects Error:", error);
+    res.status(500).json({ error: "Something went wrong", message: error.message });
+  }
+};
+
+const fetchProject = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).json({ error: "Invalid project ID" });
+    }
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    res.status(200).json(project);
+  } catch (error) {
+    console.error("Fetch Project Error:", error);
+    res.status(500).json({ error: "Something went wrong", message: error.message });
+  }
+};
+
+const updateProjectTasks = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { todo, onprogress, review, done } = req.body;
+    const updated = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        $set: {
+          todo,
+          onprogress,
+          review,
+          done,
+        },
+      },
+      { new: true }
+    );
+    if (!updated) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error('Update Project Error:', error);
+    res.status(500).json({ error: 'Failed to update project tasks' });
+  }
+};
+
+const addTasks = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { task, column } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).json({ error: "Invalid project ID" });
+    }
+    const validColumns = ['todo', 'onprogress', 'review', 'done'];
+    if (!validColumns.includes(column)) {
+      return res.status(400).json({ error: `Invalid task column: ${column}` });
+    }
+    const requiredFields = ['taskName', 'taskDesc', 'enddate', 'teammemberName', 'teamMemberID'];
+    for (const field of requiredFields) {
+      if (!task[field]) {
+        return res.status(400).json({ error: `Missing field: ${field}` });
+      }
+    }
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { $push: { [column]: task } },
+      { new: true }
+    );
+    if (!updatedProject) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    return res.status(200).json({
+      message: "Task added successfully",
+      project: updatedProject,
+    });
+  } catch (error) {
+    console.error("Add Task Error:", error);
+    return res.status(500).json({ error: "Failed to add task" });
+  }
+};
+
+const ListProjects = async (req, res) => {
+  try {
+    const projects = await Project.find();
+    if (!projects || projects.length === 0) {
+      return res.status(404).json({ message: "No projects found" });
+    }
+    const filtered = projects.filter(
+      (project) => (project.teamMembers?.length || 0) < (project.roles?.length || 0)
+    );
+    if (filtered.length === 0) {
+      return res.status(404).json({ message: "No open projects with available roles" });
+    }
+    res.status(200).json(filtered);
+  } catch (error) {
+    console.error("List Projects Error:", error);
+    res.status(500).json({ error: "Something went wrong", message: error.message });
+  }
+};
+
+
+
+
+
+module.exports = { createProject, getMyProjects, fetchProject, updateProjectTasks, addTasks, ListProjects };
+
