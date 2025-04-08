@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircleX } from 'lucide-react';
+import  UserContext from '../../Context/UserContext';
 
 const ProjectDetailModal = ({ project, onClose }) => {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+  const [selectedRole, setSelectedRole] = useState('');
 
   const handleNavigate = () => {
     navigate(`/profile/${project?.teamLeadName?.toLowerCase().replaceAll(" ", "-")}`);
   };
 
-  const handleAskToJoin =() => {
-    
-  }
+  const handleAskToJoin = () => {
+    if (!selectedRole) {
+      alert("Please select a role before joining!");
+      return;
+    }
+    console.log("Project id :", project._id);
+    console.log("User:", user.username);
+    console.log("User ID:", user.id);
+    console.log("Team Lead ID:", project.teamLeadId);
+    console.log("Selected Role:", selectedRole);
+  };
 
   return (
     <AnimatePresence>
@@ -36,7 +47,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
                 onClick={onClose}
                 className="text-red-500 font-semibold hover:underline"
               >
-                <CircleX className='text-red-700'/>
+                <CircleX className='text-red-700' />
               </button>
             </div>
 
@@ -97,7 +108,6 @@ const ProjectDetailModal = ({ project, onClose }) => {
                 </div>
               </div>
 
-              {/* Roles */}
               <div className="col-span-2 flex justify-between items-start p-3 rounded-lg">
                 <div className="font-medium">Roles</div>
                 <div className="flex gap-2 flex-wrap justify-end">
@@ -114,8 +124,8 @@ const ProjectDetailModal = ({ project, onClose }) => {
 
               <div className="col-span-2 flex justify-between items-start p-3 rounded-lg">
                 <div className="font-medium">Current Team</div>
-                  <div className="flex gap-2 flex-wrap justify-end">
-                    {project.teamMembers.map((member, i) => (
+                <div className="flex gap-2 flex-wrap justify-end">
+                  {project.teamMembers.map((member, i) => (
                     <button
                       key={i}
                       onClick={() => navigate(`/profile/${member.userid}`)}
@@ -123,9 +133,9 @@ const ProjectDetailModal = ({ project, onClose }) => {
                     >
                       {member.name} - {member.role}
                     </button>
-                    ))}
-                  </div>
+                  ))}
                 </div>
+              </div>
 
               <div className="col-span-2 flex justify-between items-center p-3 rounded-lg mt-2">
                 {project.referenceLink ? (
@@ -139,12 +149,26 @@ const ProjectDetailModal = ({ project, onClose }) => {
                   <span className="text-gray-400 italic">No reference link</span>
                 )}
 
-                <button
-                  onClick={handleAskToJoin}
-                  className="bg-sky-600 text-white px-6 py-2 rounded-md hover:bg-sky-700"
-                >
-                  Ask to Join
-                </button>
+                {/* Role Select and Join Button */}
+                <div className="flex items-center gap-3">
+                  <select
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="border border-gray-300 px-3 py-2 rounded-md text-sm"
+                  >
+                    <option value="">Select Role</option>
+                    {project.roles.map((role, i) => (
+                      <option key={i} value={role}>{role}</option>
+                    ))}
+                  </select>
+
+                  <button
+                    onClick={handleAskToJoin}
+                    className="bg-sky-600 text-white px-6 py-2 rounded-md hover:bg-sky-700"
+                  >
+                    Ask to Join
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

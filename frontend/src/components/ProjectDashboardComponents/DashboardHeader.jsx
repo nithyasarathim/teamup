@@ -17,6 +17,9 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
   const [rolesRequired, setRolesRequired] = useState([]);
 
   const user=useContext(UserContext);
+  const leadId=data?.teamLeadId;
+  const userId=user?.user?.id;
+
 
   useEffect(() => {
     if (showLinkModal && data) {
@@ -173,7 +176,7 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
           <Figma size={20} /> Figma
         </div>
 
-        {(data.teamLeadId===user.user.id)&&<div className="leader-access flex gap-2 p-2 border border-gray-200 rounded-md bg-gradient-to-r from-sky-50 via-white to-sky-50 shadow-sm">
+        {(leadId===userId)&&<div className="leader-access flex gap-2 p-2 border border-gray-200 rounded-md bg-gradient-to-r from-sky-50 via-white to-sky-50 shadow-sm">
           <button
             className="px-4 py-1 bg-sky-100 text-sm text-sky-900 font-medium rounded-lg hover:bg-sky-200 transition-colors duration-200"
             onClick={() => setShowAddTaskModal(true)}

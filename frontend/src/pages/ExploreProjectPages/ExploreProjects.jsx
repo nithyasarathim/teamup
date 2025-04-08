@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../components/Header';
 import ProjectDetailModal from './ProjectDetailModal';
+import UserContext from '../../Context/UserContext';
 
 const ExploreProjects = () => {
   const [selectedType, setSelectedType] = useState('');
@@ -11,6 +12,8 @@ const ExploreProjects = () => {
   const [error, setError] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
   const [showProjectDetail, setShowProjectDetail] = useState(false);
+  const { user } = useContext(UserContext);
+  const userId = user?.id || '';
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -55,8 +58,14 @@ const ExploreProjects = () => {
           role.toLowerCase().includes(selectedRole.toLowerCase())
         )
       : true;
-    return matchType && matchSkill && matchRole && project.teamMembers.length < project.teamSize;
+  
+    const notJoined = !project.teamMembers.some(
+      (member) => member.userid === userId
+    );
+  
+    return matchType && matchSkill && matchRole && notJoined && project.teamMembers.length < project.teamSize;
   });
+  
 
   return (
     <div>

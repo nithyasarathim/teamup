@@ -12,7 +12,7 @@ import DigestPage from './pages/DigestPages/DigestPage.jsx';
 import ExploreProjects from './pages/ExploreProjectPages/ExploreProjects.jsx';
 import ProjectsDashboard from './pages/ProjectDashboardPages/ProjectDashboard';
 import Projects from './pages/ProjectDashboardPages/Projects.jsx';
-import UserContext from './context/UserContext';
+import UserContext from './Context/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
 
 const App = () => {
@@ -41,7 +41,6 @@ const App = () => {
         <Route path='/reset-password' element={rPwdStatus ? <ResetPwd setOtpStatus={setOtpStatus} setFPwdStatus={setFPwdStatus} setRPwdStatus={setRPwdStatus} /> : <Error403 />} />
        
         
-        {/* Protected Routes */}
         <Route path='/dashboard' element={token ? (user?.isFaculty ? <FacultyDashboard /> : <UserDashboard />) : <Navigate to='/login' replace />} />
         <Route path='/digests' element={token ? <DigestPage /> : <Navigate to='/login' replace />} />
         <Route path='/explore-projects' element={token ? <ExploreProjects /> : <Navigate to='/login' replace />} />
