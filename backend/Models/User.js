@@ -5,6 +5,7 @@ const notificationSchema = new Schema({
   type: String,
   projectId: String,
   userId: String,
+  projectName: String,
   username: String,
   role: String,
   timestamp: Date,

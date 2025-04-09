@@ -3,11 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircleX } from 'lucide-react';
 import  UserContext from '../../Context/UserContext';
+import { toast } from 'react-toastify';
 
 const ProjectDetailModal = ({ project, onClose }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [selectedRole, setSelectedRole] = useState('');
+  const username= user?.username || "";
+  const id = user?.id || '';
+  
 
   const handleNavigate = () => {
     navigate(`/profile/${project?.teamLeadName?.toLowerCase().replaceAll(" ", "-")}`);
@@ -18,17 +22,16 @@ const ProjectDetailModal = ({ project, onClose }) => {
       toast.warn("Please select a role before joining!");
       return;
     }
-    console.log(project);
-  
+
     const payload = {
       projectName: project.projectName,
       projectId: project._id,
-      userId: user?.id|| "",
-      username: user?.name || "",
+      userId: id,
+      username: username,
       teamLeadId: project.teamLeadId,
       role: selectedRole,
     };
-  
+    
     try {
       const response = await fetch('http://localhost:8000/notify/request', {
         method: 'POST',

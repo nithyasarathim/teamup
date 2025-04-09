@@ -31,19 +31,24 @@ const mongoose = require('mongoose');
         }
     };
 
-    const fetchNotifications= async (req, res) => {
+    const fetchNotifications = async (req, res) => {
         const userId = req.params.userId;
         try {
-            const user = await User.findById(userId);
-            if (!user) {
-                return res.status(404).json({ message: "User not found" });
-            }
-            res.status(200).json(user.notifications);
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ message: "User not found" });
+          }
+      
+          const sortedNotifications = [...user.notifications].sort(
+            (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          );
+      
+          res.status(200).json(sortedNotifications);
         } catch (err) {
-            console.error("Error in getNotifications:", err);
-            res.status(500).json({ message: "Internal Server Error" });
+          console.error("Error in getNotifications:", err);
+          res.status(500).json({ message: "Internal Server Error" });
         }
-    };
+      };      
 
 const acceptNotify = async (req, res) => {
 }

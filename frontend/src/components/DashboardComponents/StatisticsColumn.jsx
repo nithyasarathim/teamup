@@ -10,6 +10,7 @@ const StatisticsColumn = () => {
   const username = user?.username || "Guest";
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
+  const [notificationsCount, setNotificationsCount] = useState(0);
 
   const [stats, setStats] = useState({
     totalProjects: 0,
@@ -49,11 +50,11 @@ const StatisticsColumn = () => {
       .then(res => res.json())
       .then(data => {
         setNotifications(data || []);
+        setNotificationsCount(data.length);
       })
       .catch(err => console.error('Error fetching notifications:', err));
   }, [userId]);
   
-
   const handleAddPost = () => {
     console.log("Add post triggered");
   };
@@ -109,7 +110,7 @@ const StatisticsColumn = () => {
           <div className="m-1">
             <div className="bg-orange-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md">
               <div className="px-2 py-1 flex items-center justify-center bg-orange-500 min-w-[30px] text-white text-sm font-bold rounded-full">
-                {notifications.length}
+                {notificationsCount||0}
               </div>
               <div className="text-sm ml-3">Notifications</div>
             </div>
