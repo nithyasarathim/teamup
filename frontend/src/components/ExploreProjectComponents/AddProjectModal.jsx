@@ -1,12 +1,11 @@
-import React, { useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import Select from 'react-select';
 import UserContext from '../../Context/UserContext';
 import { toast } from 'react-toastify';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-
 const AddProjectModal = ({ setShowAddProjectModal }) => {
-
   const { user } = useContext(UserContext);  
   const [formData, setFormData] = useState({
     projectName: '',
@@ -23,7 +22,7 @@ const AddProjectModal = ({ setShowAddProjectModal }) => {
     referenceLink: '',
     teamSize: ''
   });
-  
+
   const roleOptions = [
     { value: 'Frontend Developer', label: 'Frontend Developer' },
     { value: 'Backend Developer', label: 'Backend Developer' },
@@ -85,7 +84,6 @@ const AddProjectModal = ({ setShowAddProjectModal }) => {
     { value: 'Problem Solving', label: 'Problem Solving' },
   ];
   
-
   const projectTypeOptions = [
     { value: 'Hackathon', label: 'Hackathon' },
     { value: 'College Project', label: 'College Project' },
@@ -146,7 +144,7 @@ const AddProjectModal = ({ setShowAddProjectModal }) => {
 
       if (response.ok) {
         toast.info("Project created successfully");
-        setShowAddProjectModal(false)
+        setShowAddProjectModal(false);
       } else {
         toast.info("Error creating project");
       }
@@ -156,25 +154,36 @@ const AddProjectModal = ({ setShowAddProjectModal }) => {
   }
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full bg-[#00000090] flex items-center justify-center z-50'>
-      <div className='bg-white w-[50%] min-w-[350px] max-h-[90%] h-[100%] overflow-y-auto p-6 rounded-lg shadow-lg'>
-        <h2 className='text-2xl font-bold text-gray-800 mb-4 text-center'>Create New Project</h2>
-        <form onSubmit={handleAddProject} className='flex flex-col gap-3'>
-          <input type="text" name="projectName" value={formData.projectName} onChange={handleChange} placeholder='Project Name' className='input p-2' />
-          <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} placeholder='Team Name' className='input p-2' />
+    <AnimatePresence>
+      <motion.div
+        className='fixed top-0 left-0 w-full h-full bg-[#00000090] flex items-center justify-center z-50'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <motion.div
+          className='bg-white w-[50%] min-w-[350px] max-h-[90%] h-[100%] overflow-y-auto p-6 rounded-lg shadow-lg'
+          initial={{ scale: 0.8, opacity: 0, y: -40 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.8, opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <h2 className='text-2xl font-bold text-gray-800 mb-4 text-center'>Create New Project</h2>
+          <form onSubmit={handleAddProject} className='flex flex-col gap-3'>
+            <input type="text" name="projectName" value={formData.projectName} onChange={handleChange} placeholder='Project Name' className='input p-2' />
+            <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} placeholder='Team Name' className='input p-2' />
 
-          <Select
-            isMulti
-            name="roles"
-            options={roleOptions}
-            value={formData.roles}
-            onChange={(selected) => setFormData({ ...formData, roles: selected })}
-            placeholder="Select Roles"
-            classNamePrefix="select"
-          />
+            <Select
+              isMulti
+              name="roles"
+              options={roleOptions}
+              value={formData.roles}
+              onChange={(selected) => setFormData({ ...formData, roles: selected })}
+              placeholder="Select Roles"
+              classNamePrefix="select"
+            />
 
-          <div className="flex gap-4">
-            <div className="flex-1">
+            <div className="flex gap-4">
               <Select
                 name="projectType"
                 options={projectTypeOptions}
@@ -183,9 +192,6 @@ const AddProjectModal = ({ setShowAddProjectModal }) => {
                 placeholder="Select Project Type"
                 classNamePrefix="select"
               />
-            </div>
-
-            <div className="flex-1">
               <Select
                 name="projectStatus"
                 options={projectStatusOptions}
@@ -195,34 +201,34 @@ const AddProjectModal = ({ setShowAddProjectModal }) => {
                 classNamePrefix="select"
               />
             </div>
-          </div>
 
-          <div className="flex gap-4">
-            <input type="number" name="projectDuration" value={formData.projectDuration} onChange={handleChange} placeholder="Project Duration (in months)" className="input p-2 flex-1 border border-gray-300 rounded-md"/>
-            <input type="number" name="teamSize" value={formData.teamSize} onChange={handleChange} max={8} placeholder="Team Size" className="input p-2 flex-1 border border-gray-300 rounded-md"/>
-          </div>
+            <div className="flex gap-4">
+              <input type="number" name="projectDuration" value={formData.projectDuration} onChange={handleChange} placeholder="Project Duration (months)" className="input p-2 flex-1 border border-gray-300 rounded-md" />
+              <input type="number" name="teamSize" value={formData.teamSize} onChange={handleChange} max={8} placeholder="Team Size" className="input p-2 flex-1 border border-gray-300 rounded-md" />
+            </div>
 
-          <Select
-            isMulti
-            name="skills"
-            options={skillOptions}
-            value={formData.skills}
-            onChange={(selected) => setFormData({ ...formData, skills: selected })}
-            placeholder="Select Skills"
-            classNamePrefix="select"
-          />
+            <Select
+              isMulti
+              name="skills"
+              options={skillOptions}
+              value={formData.skills}
+              onChange={(selected) => setFormData({ ...formData, skills: selected })}
+              placeholder="Select Skills"
+              classNamePrefix="select"
+            />
 
-          <input type="text" name="projectLink" value={formData.projectLink} onChange={handleChange} placeholder='Project Link (optional)' className='input p-2' />
-          <input type="text" name="prototypeLink" value={formData.prototypeLink} onChange={handleChange} placeholder='Prototype Link (optional)' className='input p-2' />
-          <input type="text" name="referenceLink" value={formData.referenceLink} onChange={handleChange} placeholder='Reference Link (optional)' className='input p-2' />
-          
-          <div className='flex justify-between mt-4'>
-            <button type='button' onClick={handleClose} className='text-gray-600 border border-gray-300 px-4 py-1 rounded-lg hover:bg-gray-100'>Cancel</button>
-            <button type='submit' className='bg-sky-500 text-white px-4 py-1 rounded-lg shadow-md hover:bg-sky-600 duration-300'>Create Project</button>
-          </div>
-        </form>
-      </div>
-    </div>
+            <input type="text" name="projectLink" value={formData.projectLink} onChange={handleChange} placeholder='Project Link (optional)' className='input p-2' />
+            <input type="text" name="prototypeLink" value={formData.prototypeLink} onChange={handleChange} placeholder='Prototype Link (optional)' className='input p-2' />
+            <input type="text" name="referenceLink" value={formData.referenceLink} onChange={handleChange} placeholder='Reference Link (optional)' className='input p-2' />
+            
+            <div className='flex justify-between mt-4'>
+              <button type='button' onClick={handleClose} className='text-gray-600 border border-gray-300 px-4 py-1 rounded-lg hover:bg-gray-100'>Cancel</button>
+              <button type='submit' className='bg-sky-500 text-white px-4 py-1 rounded-lg shadow-md hover:bg-sky-600 duration-300'>Create Project</button>
+            </div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

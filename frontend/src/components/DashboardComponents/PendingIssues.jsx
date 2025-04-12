@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { motion } from 'framer-motion';
 import UserContext from '../../Context/UserContext';
 import { Info, AlertTriangle } from 'lucide-react';
 
@@ -16,9 +17,7 @@ const PendingIssues = () => {
 
     fetch('http://localhost:8000/projects/my-projects', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user: userId }),
     })
       .then((res) => res.json())
@@ -59,28 +58,60 @@ const PendingIssues = () => {
     return '';
   };
 
+  // Animation variants
+  const taskVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.08,
+        duration: 0.4,
+        ease: 'easeOut',
+      },
+    }),
+  };
+
+  const tabVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.05,
+        duration: 0.3,
+      },
+    }),
+  };
+
   return (
-    <div className='h-fit col-span-2 shadow-md'>
+    <div className="h-fit col-span-2 shadow-md">
       <div className="bg-white p-2 rounded-md h-fit md:h-[80vh]">
-        <div className='flex justify-between p-3 items-center'>
-          <h2 className='border-b text-left text-lg text-sky-600 font-bold'>Pending Issues</h2>
+        <div className="flex justify-between p-3 items-center">
+          <h2 className="border-b text-left text-lg text-sky-600 font-bold">Pending Issues</h2>
         </div>
 
-        <div className='announcement flex overflow-x-auto gap-2 p-2 my-1 bg-gray-50'>
+        <div className="announcement flex overflow-x-auto gap-2 p-2 my-1 bg-gray-50">
           {projects.map((project, index) => (
-            <button
+            <motion.button
               key={index}
+              custom={index}
+              initial="hidden"
+              animate="visible"
+              variants={tabVariants}
               onClick={() => setSelectedProjectIndex(index)}
-              className={`duration-150 ${selectedProjectIndex === index
-                ? 'px-3 text-sky-600 border-b font-bold text-md'
-                : 'px-2 text-gray-500 text-sm'}`}
+              className={`duration-150 ${
+                selectedProjectIndex === index
+                  ? 'px-3 text-sky-600 border-b font-bold text-md'
+                  : 'px-2 text-gray-500 text-sm'
+              }`}
             >
               {project.projectName}
-            </button>
+            </motion.button>
           ))}
         </div>
 
-        <div className='announcement-list overflow-y-auto h-[64vh] p-2'>
+        <div className="announcement-list overflow-y-auto h-[64vh] p-2">
           {projects.length > 0 ? (
             getAllTasks(projects[selectedProjectIndex]).map((task, index) => {
               const dueInDays = getDueInDays(task.enddate);
@@ -88,23 +119,32 @@ const PendingIssues = () => {
               const dueToStyle = getDueToStyle(task.dueTo);
 
               return (
-                <div key={index} className='p-2 flex items-center shadow-sm my-2 rounded-md'>
-                  <div className='flex flex-col align-center space-y-1 flex-grow justify-between'>
-                    <p className='text-sm font-bold max-w-[220px]'>{task.taskName}</p>
-                    <div className='flex justify-between text-sm text-gray-500'>
-                      <span className={`font-bold text-xs w-[120px] text-center rounded-lg p-1 ${dueDateStyle}`}>
+                <motion.div
+                  key={index}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={taskVariants}
+                  className="p-2 flex items-center shadow-sm my-2 rounded-md"
+                >
+                  <div className="flex flex-col align-center space-y-1 flex-grow justify-between">
+                    <p className="text-sm font-bold max-w-[220px]">{task.taskName}</p>
+                    <div className="flex justify-between text-sm text-gray-500">
+                      <span
+                        className={`font-bold text-xs w-[120px] text-center rounded-lg p-1 ${dueDateStyle}`}
+                      >
                         Due in {dueInDays} days
                       </span>
                     </div>
                   </div>
-                  <div className='flex '>
-                  <span className={`font-bold text-xs rounded-full px-2 py-1 ${dueToStyle}`}>
-                    {task.dueTo.replace('onprogress', 'On Progress').toUpperCase()}
-                  </span>
-
-                  
+                  <div className="flex">
+                    <span
+                      className={`font-bold text-xs rounded-full px-2 py-1 ${dueToStyle}`}
+                    >
+                      {task.dueTo.replace('onprogress', 'On Progress').toUpperCase()}
+                    </span>
                   </div>
-                </div>
+                </motion.div>
               );
             })
           ) : (

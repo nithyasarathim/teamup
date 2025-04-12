@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../../Context/UserContext';
+import { motion } from 'framer-motion';
 
 const MyProjects = ({ refreshTrigger }) => {
   const [projects, setProjects] = useState([]);
   const { user } = useContext(UserContext);
-  const Id=user?.id||"";
+  const Id = user?.id || "";
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,10 +40,15 @@ const MyProjects = ({ refreshTrigger }) => {
             (project.review?.length || 0);
 
           return (
-            <div
+            <motion.div
               key={index}
               onClick={() => handleProjectClick(project._id)}
               className="bg-white shadow-md p-5 hover:shadow-lg transition duration-300 rounded-lg cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.4, ease: 'easeOut' }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <table className="w-full border-collapse">
                 <thead>
@@ -96,7 +102,7 @@ const MyProjects = ({ refreshTrigger }) => {
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </motion.div>
           );
         })}
       </div>
