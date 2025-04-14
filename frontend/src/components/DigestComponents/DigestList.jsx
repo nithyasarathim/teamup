@@ -1,50 +1,51 @@
 import React from 'react';
-import TestImg from '../../assets//stockimg.jpg'; 
+import TestImg from '../../assets/stockimg.jpg';
 
-const DigestList = ({ digests, setSelectedDigest }) => {
+const DigestList = ({ digests, setSelectedDigest, filterCategory, setFilterCategory }) => {
   return (
-    <div className='col-span-2 h-[100%] items-center flex'>
-        <div className=' h-[80%] bg-white shadow-sm m-2'>
-      <div className='m-3 text-lg font-semibold justify-between flex text-sky-600 border-b'>
-        Digests
-        <select className="filter ml-2 w-40 text-black font-light text-sm">
-          <option value="all">All</option>
-          <option value="machinelearning">Machine Learning</option>
-          <option value="datascience">Data Science</option>
-          <option value="IoT">IoT</option>
-          <option value="cloudcomputing">Cloud Computing</option>
-          <option value="blockchain">Blockchain</option>
-          <option value="cybersecurity">Cyber Security</option>
-          <option value="webdevelopment">Web Development</option>
-          <option value="mobiledevelopment">Mobile Development</option>
-          <option value="devops">DevOps</option>
-          <option value="agile">Agile</option>
-          <option value="projectmanagement">Project Management</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      
-      <div className='digest-list mt-5 overflow-y-auto h-[85%]'>
-        {digests.map((digest) => (
-          <div 
-            key={digest.id} 
-            className='bg-white p-2 m-2 rounded-md shadow-sm flex duration-300 hover:bg-sky-50 hover:shadow-md cursor-pointer' 
-            onClick={() => setSelectedDigest(digest)}
+    <div className='col-span-2 h-full flex'>
+      <div className='h-[90%] w-full bg-white shadow-sm m-2 rounded-lg p-2'>
+        <div className='mb-4 px-3 flex items-center justify-between border-b pb-2'>
+          <h2 className='text-lg font-semibold text-sky-600'>Digests</h2>
+          <select
+            className="filter w-40 text-black font-light text-sm p-1 border border-gray-300 rounded"
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
           >
-            <div className='img-container w-1/4'>
-              <img src={TestImg} alt='Default' className='w-full h-auto justify-center align-center rounded-md' />
-            </div>
-            <div className='content-container w-3/4 p-1 ml-2'>
-              <h3 className='text-sm font-bold mb-1 min-h-[40px]'>{digest.title}</h3>
-              <div className='flex justify-between gap-1'>
-                <p className='text-xs text-black px-2 my-1 mx-auto rounded-md py-1 bg-sky-50'>{digest.category}</p>
-                <p className='text-xs text-black px-2 my-1 mx-auto rounded-md py-1 bg-sky-50'>{digest.timestamp}</p>
+            <option value="all">All</option>
+            <option value="Hackathon">Hackathon</option>
+            <option value="Paper Presentation">Paper Presentation</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+
+        <div className='digest-list overflow-y-auto h-[85%] pr-1'>
+          {digests.length > 0 ? (
+            digests.map((digest) => (
+              <div
+                key={digest.id}
+                className='p-2 mb-2 bg-white rounded-md shadow-sm hover:bg-sky-50 cursor-pointer flex gap-3'
+                onClick={() => setSelectedDigest(digest)}
+              >
+                <img
+                  src={TestImg}
+                  alt='digest'
+                  className='w-14 h-14 rounded-md object-cover'
+                />
+                <div className='w-full'>
+                  <h3 className='text-sm font-semibold mb-1'>{digest.title}</h3>
+                  <div className='flex justify-between text-xs text-gray-600'>
+                    <p className='bg-sky-100 px-2 py-0.5 rounded'>{digest.category}</p>
+                    <p className='text-gray-400'>{digest.timestamp}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            ))
+          ) : (
+            <p className='text-center text-gray-500 mt-10'>No digests found for this category.</p>
+          )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

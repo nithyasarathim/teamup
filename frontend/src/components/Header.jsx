@@ -8,6 +8,7 @@ import userContext from '../Context/UserContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Profile from '../assets/default.jpg';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const sidePanelVariants = {
   hidden: (direction) => ({
@@ -48,8 +49,50 @@ const Header = () => {
         const sorted = (data || []).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setNotifications(sorted);
       })
-      .catch(err => console.error('Error fetching notifications:', err));
+      .catch(err => {});
   };
+  
+  const handleAccept = (note) => {
+
+    fetch(`http://localhost:8000/notify/accept`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Id: userId, 
+        notificationId: note._id, 
+        userName: note.username, 
+        userId: note.userId, 
+        projectId: note.projectId, 
+        role: note.role
+      }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message === 'User is already a team member') {
+        toast.info(`${note.username} is already a member of the project as ${note.role}`);
+      } else {
+        fetchNotifications(); 
+        toast.info(`${note.username} has been added to the project as ${note.role}`);
+      }
+    })
+    .catch(err =>{});
+};
+
+  
+  const handleReject = (note) => {
+    fetch(`http://localhost:8000/notify/reject`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notificationId: note._id, userId: userId}),
+    })
+      .then(res => res.json())
+      .then(data => {
+        toast.info("Notification deleted successfully");
+        fetchNotifications(); 
+      })
+      .catch(err =>{});
+  };
+  
 
   useEffect(() => {
     fetchNotifications();
@@ -70,7 +113,6 @@ const Header = () => {
     <div className='justify-between flex items-center p-4 relative'>
       <img src={Logo} alt='Logo' className='h-11 m-0' />
 
-      {/* Nav Links */}
       <div className='navLinks h-12 center items-center bg-sky-50 px-3 rounded-xl gap-6 hidden md:flex'>
         {navLinks.map(({ to, icon, label }) => (
           <div key={to}
@@ -81,7 +123,6 @@ const Header = () => {
         ))}
       </div>
 
-      {/* Right section */}
       <div className='flex w-fit items-center gap-5 mx-5 bg-sky-100 p-1 px-2 rounded-lg justify-between'>
         <input className='w-[80%] bg-white rounded-xl p-1 border-red hidden sm:flex md:hidden xl:flex' placeholder='Search for something' />
         <List size={20} className='md:hidden cursor-pointer' onClick={() => setListOpen(true)} />
@@ -164,27 +205,35 @@ const Header = () => {
                 <div className='flex flex-col gap-2 overflow-y-auto'>
                   {notifications.map((note, index) => (
                     <motion.div
-                      key={index}
-                      className='p-3 border border-gray-300 shadow-xs rounded bg-white'
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <p className='text-sm font-medium text-black mb-2'>
-                        <span className='text-sky-600 font-semibold'>{note.username}</span> has requested to join the <span className='text-sky-600 font-semibold'>{note.projectName}</span> project as a <span className='text-sky-600 font-semibold'>{note.role}</span>. Would you like to approve the request?
-                      </p>
-                      <p className='text-xs text-gray-500 italic'>
-                        {new Date(note.timestamp).toLocaleString()}
-                      </p>
-                      <div className='flex gap-3 mt-2 justify-end'>
-                        <motion.button whileTap={{ scale: 0.95 }} className='bg-green-300 hover:bg-green-600 duration-400 text-green-900 text-xs font-semibold px-3 py-1 rounded'>
-                          Accept
-                        </motion.button>
-                        <motion.button whileTap={{ scale: 0.95 }} className='bg-red-300 hover:bg-red-600 duration-200 text-red-900 text-xs font-semibold px-3 py-1 rounded'>
-                          Decline
-                        </motion.button>
-                      </div>
-                    </motion.div>
+                    key={index}
+                    className='p-3 border border-gray-300 shadow-xs rounded bg-white'
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <p className='text-sm font-medium text-black mb-2'>
+                      <span className='text-sky-600 font-semibold'>{note.username}</span> has requested to join the <span className='text-sky-600 font-semibold'>{note.projectName}</span> project as a <span className='text-sky-600 font-semibold'>{note.role}</span>. Would you like to approve the request?
+                    </p>
+                    <p className='text-xs text-gray-500 italic'>
+                      {new Date(note.timestamp).toLocaleString()}
+                    </p>
+                    <div className='flex gap-3 mt-2 justify-end'>
+                      <motion.button 
+                        whileTap={{ scale: 0.95 }} 
+                        className='bg-green-300 hover:bg-green-600 duration-400 text-green-900 text-xs font-semibold px-3 py-1 rounded'
+                        onClick={() => handleAccept(note)}
+                      >
+                        Accept
+                      </motion.button>
+                      <motion.button 
+                        whileTap={{ scale: 0.95 }} 
+                        className='bg-red-300 hover:bg-red-600 duration-200 text-red-900 text-xs font-semibold px-3 py-1 rounded'
+                        onClick={() => handleReject(note)}
+                      >
+                        Decline
+                      </motion.button>
+                    </div>
+                  </motion.div>                  
                   ))}
                 </div>
               ) : (
@@ -195,7 +244,6 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      {/* Profile Drawer */}
       <AnimatePresence>
         {isProfileOpen && (
           <>

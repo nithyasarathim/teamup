@@ -58,7 +58,6 @@ const PendingIssues = () => {
     return '';
   };
 
-  // Animation variants
   const taskVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i) => ({
@@ -113,42 +112,54 @@ const PendingIssues = () => {
 
         <div className="announcement-list overflow-y-auto h-[64vh] p-2">
           {projects.length > 0 ? (
-            getAllTasks(projects[selectedProjectIndex]).map((task, index) => {
-              const dueInDays = getDueInDays(task.enddate);
-              const dueDateStyle = getDueDateStyle(dueInDays);
-              const dueToStyle = getDueToStyle(task.dueTo);
+            getAllTasks(projects[selectedProjectIndex]).length > 0 ? (
+              getAllTasks(projects[selectedProjectIndex]).map((task, index) => {
+                const dueInDays = getDueInDays(task.enddate);
+                const dueDateStyle = getDueDateStyle(dueInDays);
+                const dueToStyle = getDueToStyle(task.dueTo);
 
-              return (
-                <motion.div
-                  key={index}
-                  custom={index}
-                  initial="hidden"
-                  animate="visible"
-                  variants={taskVariants}
-                  className="p-2 flex items-center shadow-sm my-2 rounded-md"
-                >
-                  <div className="flex flex-col align-center space-y-1 flex-grow justify-between">
-                    <p className="text-sm font-bold max-w-[220px]">{task.taskName}</p>
-                    <div className="flex justify-between text-sm text-gray-500">
+                return (
+                  <motion.div
+                    key={index}
+                    custom={index}
+                    initial="hidden"
+                    animate="visible"
+                    variants={taskVariants}
+                    className="p-2 flex items-center shadow-sm my-2 rounded-md"
+                  >
+                    <div className="flex flex-col align-center space-y-1 flex-grow justify-between">
+                      <p className="text-sm font-bold max-w-[220px]">{task.taskName}</p>
+                      <div className="flex justify-between text-sm text-gray-500">
+                        {dueInDays > 0 ? (
+                          <span
+                            className={`font-bold text-xs w-[120px] text-center rounded-lg p-1 ${dueDateStyle}`}
+                          >
+                            Due in {dueInDays} days
+                          </span>
+                        ) : (
+                          <span
+                            className={`font-bold text-xs w-[120px] text-center rounded-lg p-1 ${dueDateStyle}`}
+                          >
+                            Task Overdue !
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex">
                       <span
-                        className={`font-bold text-xs w-[120px] text-center rounded-lg p-1 ${dueDateStyle}`}
+                        className={`font-bold text-xs rounded-full px-2 py-1 ${dueToStyle}`}
                       >
-                        Due in {dueInDays} days
+                        {task.dueTo.replace('onprogress', 'On Progress').toUpperCase()}
                       </span>
                     </div>
-                  </div>
-                  <div className="flex">
-                    <span
-                      className={`font-bold text-xs rounded-full px-2 py-1 ${dueToStyle}`}
-                    >
-                      {task.dueTo.replace('onprogress', 'On Progress').toUpperCase()}
-                    </span>
-                  </div>
-                </motion.div>
-              );
-            })
+                  </motion.div>
+                );
+              })
+            ) : (
+              <p className="text-center text-gray-500 mt-4">No tasks assigned for you.</p>
+            )
           ) : (
-            <p className="text-center text-gray-500 mt-4">No tasks assigned for you!</p>
+            <p className="text-center text-gray-500 mt-4">No projects is there for you !</p>
           )}
         </div>
       </div>

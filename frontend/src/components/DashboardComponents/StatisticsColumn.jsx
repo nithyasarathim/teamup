@@ -117,36 +117,72 @@ const StatisticsColumn = () => {
       {/* Stats + Quick Links */}
       <div className="w-[95%] grid mx-auto grid-cols-1 md:grid-cols-3 gap-4 p-4">
         <div className="space-y-3">
-          {[ 
-            { label: 'Total Projects', count: stats.totalProjects, color: 'green' },
-            { label: 'Current Projects', count: stats.currentProjects, color: 'sky' },
-            { label: 'Total Issues', count: stats.totalIssues, color: 'red' },
-            { label: 'Notifications', count: notificationsCount||0, color: 'purple' }
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              custom={index}
-              initial="hidden"
-              animate="visible"
-              variants={statCardVariants}
-              className={`bg-${stat.color}-100 p-2 my-3 flex items-center h-15 rounded-lg shadow-md m-1`}
-            >
-              <div className={`px-2 py-1 flex items-center justify-center bg-${stat.color}-500 min-w-[32px] text-white text-sm font-bold rounded-full`}>
-                {stat.count}
-              </div>
-              <div className="text-sm ml-3">{stat.label}</div>
-            </motion.div>
-          ))}
+          {/* Total Projects */}
+          <motion.div
+            custom={0}
+            initial="hidden"
+            animate="visible"
+            variants={statCardVariants}
+            className="bg-green-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md m-1"
+          >
+            <div className="px-2 py-1 flex items-center justify-center bg-green-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+              {stats.totalProjects}
+            </div>
+            <div className="text-sm ml-3">Total Projects</div>
+          </motion.div>
+
+          {/* Current Projects */}
+          <motion.div
+            custom={1}
+            initial="hidden"
+            animate="visible"
+            variants={statCardVariants}
+            className="bg-amber-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md m-1"
+          >
+            <div className="px-2 py-1 flex items-center justify-center bg-amber-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+              {stats.currentProjects}
+            </div>
+            <div className="text-sm ml-3">Current Projects</div>
+          </motion.div>
+
+          {/* Total Issues */}
+          <motion.div
+            custom={2}
+            initial="hidden"
+            animate="visible"
+            variants={statCardVariants}
+            className="bg-red-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md m-1"
+          >
+            <div className="px-2 py-1 flex items-center justify-center bg-red-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+              {stats.totalIssues}
+            </div>
+            <div className="text-sm ml-3">Total Issues</div>
+          </motion.div>
+
+          {/* Notifications */}
+          <motion.div
+            custom={3}
+            initial="hidden"
+            animate="visible"
+            variants={statCardVariants}
+            className="bg-sky-50 p-2 my-3 flex items-center h-15 rounded-lg shadow-md m-1"
+          >
+            <div className="px-2 py-1 flex items-center justify-center bg-sky-500 min-w-[32px] text-white text-sm font-bold rounded-full">
+              {notificationsCount || 0}
+            </div>
+            <div className="text-sm ml-3">Notifications</div>
+          </motion.div>
         </div>
 
+        {/* Quick Links */}
         <div className='col-span-2 my-auto'>
           <p className='text-center text-xl font-bold my-4'>Quick Links</p>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             {[
-              { icon: <Mail size={24} className='text-red-600' />, label: 'Send Mail' },
-              { icon: <Kanban size={24} className='text-purple-600' />, label: 'Board', onClick: () => navigate('/projects') },
-              { icon: <MessageSquare size={24} className='text-yellow-600' />, label: 'Add Post', onClick: handleAddPost },
-              { icon: <Presentation size={24} className='text-pink-600' />, label: 'Discuss' },
+              { icon: <Mail size={24} className='text-green-400' />, label: 'Send Mail' },
+              { icon: <Kanban size={24} className='text-yellow-400' />, label: 'Board', onClick: () => navigate('/projects') },
+              { icon: <MessageSquare size={24} className='text-red-600' />, label: 'Add Post', onClick: handleAddPost },
+              { icon: <Presentation size={24} className='text-sky-600' />, label: 'Discuss' },
             ].map((item, index) => (
               <motion.div
                 key={index}

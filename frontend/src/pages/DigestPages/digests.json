@@ -3,45 +3,45 @@
     "id": 1,
     "user": "John Doe",
     "title": "Internship for higher grade students across the university",
-    "category": "Mobile App Development",
+    "category": "Internship",
     "timestamp": "30 mins ago",
     "content": "This is a detailed description of the internship opportunity available for students worldwide. The program is designed for students who have a strong interest in mobile application development and want hands-on experience in building real-world applications. Participants will work alongside experienced developers, gaining insights into industry best practices, UI/UX design, and backend development. The internship is remote-friendly, allowing students from different regions to collaborate on exciting projects. Interested students should have a basic understanding of programming languages such as Java, Swift, or Flutter. Applications are open now, and selection will be based on merit and prior experience.",
-    "upvotes": 10
+    "likes": 10
   },
   {
     "id": 2,
     "user": "Jane Smith",
     "title": "Exciting Machine Learning Research Opportunity",
-    "category": "Machine Learning",
+    "category": "Paper Presentation",
     "timestamp": "1 hour ago",
     "content": "A new research project in machine learning is looking for participants. The study focuses on deep learning techniques and their applications in computer vision and natural language processing. Researchers will have access to high-performance computing resources and datasets to experiment with different models. The program is open to students and professionals interested in AI research, and prior experience with Python, TensorFlow, or PyTorch is preferred. Participants will collaborate with leading AI experts, publishing research papers and contributing to open-source projects. This is a unique opportunity to work on cutting-edge AI advancements and make a meaningful impact in the field.",
-    "upvotes": 25
+    "likes": 25
   },
   {
     "id": 3,
     "user": "Alice Brown",
     "title": "Cybersecurity Workshop for Beginners",
-    "category": "Cyber Security",
+    "category": "Hackathon",
     "timestamp": "2 days ago",
     "content": "A hands-on cybersecurity workshop covering the basics of ethical hacking. This event is perfect for beginners who want to learn about cybersecurity threats, penetration testing, and security protocols. The workshop will be conducted by experienced security professionals who will guide participants through practical exercises on identifying vulnerabilities and securing systems. Attendees will gain fundamental knowledge of network security, encryption techniques, and best practices to protect against cyberattacks. No prior experience is required, making it an ideal opportunity for students and professionals interested in cybersecurity. Certificates will be provided upon successful completion of the workshop.",
-    "upvotes": 5
+    "likes": 5
   },
   {
     "id": 4,
     "user": "Michael Lee",
     "title": "Web Development Bootcamp for Beginners",
-    "category": "Web Development",
+    "category": "Hackathon",
     "timestamp": "3 hours ago",
     "content": "An immersive web development bootcamp designed for beginners who want to build their own websites and web applications. This program covers the fundamentals of HTML, CSS, JavaScript, and modern frameworks like React and Vue.js. Participants will work on real-world projects and receive mentorship from industry professionals. By the end of the bootcamp, attendees will have a portfolio showcasing their skills, making them job-ready. Whether you're looking to start a career in web development or enhance your coding skills, this bootcamp provides the perfect foundation. No prior experience is required, and all necessary tools will be provided.",
-    "upvotes": 15
+    "likes": 15
   },
   {
     "id": 5,
     "user": "Emma Watson",
     "title": "Data Science Fellowship Program",
-    "category": "Data Science",
+    "category": "Internship",
     "timestamp": "1 day ago",
     "content": "A prestigious data science fellowship program designed for aspiring data scientists who want to advance their skills. This intensive program covers statistical analysis, data visualization, machine learning, and big data technologies. Participants will work on real-world datasets, solving complex business problems using data-driven approaches. The fellowship includes mentorship from leading data scientists, networking opportunities, and career guidance. Applicants should have basic knowledge of programming languages such as Python or R. Successful candidates will receive a certificate and potential job opportunities in top tech companies. Limited seats are available, so early registration is encouraged. A prestigious data science fellowship program designed for aspiring data scientists who want to advance their skills. This intensive program covers statistical analysis, data visualization, machine learning, and big data technologies. Participants will work on real-world datasets, solving complex business problems using data-driven approaches. The fellowship includes mentorship from leading data scientists, networking opportunities, and career guidance. Applicants should have basic knowledge of programming languages such as Python or R. Successful candidates will receive a certificate and potential job opportunities in top tech companies. Limited seats are available, so early registration is encouraged ",
-    "upvotes": 20
+    "likes": 20
   }
 ]

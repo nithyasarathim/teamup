@@ -43,10 +43,10 @@ const ProjectDetailModal = ({ project, onClose }) => {
   
       if (!response.ok) throw new Error("Request failed");
   
-      alert("Request sent successfully!");
+      toast.info("Request sent successfully!");
     } catch (error) {
       console.error("Error sending request:", error);
-      alert("Failed to send request. Try again.");
+      toast.info("Failed to send request. Try again.");
     }
   };
   

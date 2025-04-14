@@ -1,31 +1,19 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import TestImg from '../../assets/logo.png';
-import { PlusIcon } from 'lucide-react';
+import React from "react";
+import digestsData from "../../pages/DigestPages/digests.json";
+import TestImg from "../../assets/logo.png";
 
-const digestVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.4,
-      ease: 'easeOut',
-    },
-  }),
+const timeToMinutes = (timeStr) => {
+  const lower = timeStr.toLowerCase();
+  if (lower.includes("min")) return parseInt(lower);
+  if (lower.includes("hour")) return parseInt(lower) * 60;
+  if (lower.includes("day")) return parseInt(lower) * 1440;
+  return Infinity;
 };
 
-const digests = new Array(7).fill({
-  title: 'Internship for higher grade students across the university of the world...',
-  category: 'Mobile App development',
-  time: '30 mins ago',
-});
-
-const LatestDigest = () => {
-  const setAnnouncementModal = () => {
-    console.log('Modal Open');
-  };
+const LatestDigests = () => {
+  const sortedDigests = [...digestsData].sort(
+    (a, b) => timeToMinutes(a.timestamp) - timeToMinutes(b.timestamp)
+  );
 
   return (
     <div className="grid-col-2 col-span-2 mx-2 justify-center gap-3">
@@ -37,35 +25,32 @@ const LatestDigest = () => {
         </div>
 
         <div className="announcement-list overflow-y-auto h-[90%]">
-          {digests.map((digest, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={digestVariants}
+          {sortedDigests.map((digest) => (
+            <div
+              key={digest.id}
               className="bg-white p-2 m-2 rounded-md shadow-sm flex duration-300 hover:bg-sky-50 hover:shadow-md"
-              onClick={() => setAnnouncementModal(true)}
             >
               <div className="img-container w-1/4">
                 <img
                   src={TestImg}
-                  alt="noimg"
+                  alt="digest"
                   className="w-full h-auto justify-center align-center rounded-md"
                 />
               </div>
               <div className="content-container w-3/4 p-1 ml-2">
-                <h3 className="text-sm font-bold mb-1 min-h-[40px]">{digest.title}</h3>
-                <div className="flex justify-between gap-1">
+                <h3 className="text-sm font-bold mb-1 min-h-[40px]">
+                  {digest.title}
+                </h3>
+                <div className="flex justify-between gap-1 flex-wrap">
                   <p className="text-xs text-black px-2 my-1 mx-auto rounded-md py-1 bg-sky-50">
                     {digest.category}
                   </p>
                   <p className="text-xs text-black px-2 my-1 mx-auto rounded-md py-1 bg-sky-50">
-                    {digest.time}
+                    {digest.timestamp}
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -73,4 +58,4 @@ const LatestDigest = () => {
   );
 };
 
-export default LatestDigest;
+export default LatestDigests;
