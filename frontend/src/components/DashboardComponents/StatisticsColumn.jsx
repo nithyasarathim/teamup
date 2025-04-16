@@ -21,7 +21,7 @@ const StatisticsColumn = () => {
 
   useEffect(() => {
     if (!userId) return;
-
+  
     fetch('http://localhost:8000/projects/my-projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -30,19 +30,27 @@ const StatisticsColumn = () => {
       .then((res) => res.json())
       .then((data) => {
         const totalProjects = data.length;
-        const currentProjects = data.filter(p => p.projectstatus !== 'completed').length;
-
+        const currentProjects = data.filter(p => p.projectStatus !== 'completed').length;
+        console.log('Current Projects:', currentProjects);
+  
         let totalIssues = 0;
         data.forEach(project => {
           ['todo', 'onprogress', 'review'].forEach(section => {
-            totalIssues += Array.isArray(project[section]) ? project[section].length : 0;
+            if (Array.isArray(project[section])) {
+              project[section].forEach(task => {
+                if (task.teamMemberID === userId) {
+                  totalIssues += 1;
+                }
+              });
+            }
           });
         });
-
+  
         setStats({ totalProjects, currentProjects, totalIssues });
       })
-      .catch(err => console.error('Error:', err));
+      .catch((err) => console.error('Error:', err));
   }, [userId]);
+  
 
   useEffect(() => {
     if (!userId) return;
@@ -114,10 +122,8 @@ const StatisticsColumn = () => {
         <img src={WelcomeImg} className="w-[35%] h-auto max-w-xs rounded-lg" alt="Welcome" />
       </motion.div>
 
-      {/* Stats + Quick Links */}
       <div className="w-[95%] grid mx-auto grid-cols-1 md:grid-cols-3 gap-4 p-4">
         <div className="space-y-3">
-          {/* Total Projects */}
           <motion.div
             custom={0}
             initial="hidden"

@@ -22,6 +22,10 @@ const emailSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: Boolean,
+    default: false,
+  },
   sentAt: {
     type: Date,
     default: Date.now,
