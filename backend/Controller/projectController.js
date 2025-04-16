@@ -109,8 +109,10 @@ const ListProjects = async (req, res) => {
       return res.status(404).json({ message: "No projects found" });
     }
     const filtered = projects.filter(
-      (project) => (project.teamMembers?.length || 0) < (project.roles?.length || 0)
+      (project) => project.teamMembers.length <= project.teamSize
     );
+    
+    
     if (filtered.length === 0) {
       return res.status(404).json({ message: "No open projects with available roles" });
     }

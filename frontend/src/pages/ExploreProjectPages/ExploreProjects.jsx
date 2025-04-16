@@ -30,6 +30,7 @@ const ExploreProjects = () => {
         if (!response.ok) throw new Error('Failed to fetch projects');
 
         const data = await response.json();
+        console.log('Fetched projects:', data);
         setProjects(data);
       } catch (err) {
         setError(err.message);

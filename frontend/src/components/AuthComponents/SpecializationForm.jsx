@@ -2,13 +2,26 @@ import React from "react";
 import Select from "react-select";
 
 const skillOptions = [
-  { value: "Mobile App Development", label: "Mobile App Development" },
-  { value: "Machine Learning", label: "Machine Learning" },
-  { value: "IoT", label: "IoT" },
-  { value: "Web Development", label: "Web Development" },
-  { value: "Full Stack Development", label: "Full Stack Development" },
-  { value: "Cloud Computing", label: "Cloud Computing" },
-  { value: "Cybersecurity", label: "Cybersecurity" },
+  { value: 'Frontend Developer', label: 'Frontend Developer' },
+    { value: 'Backend Developer', label: 'Backend Developer' },
+    { value: 'Fullstack Developer', label: 'Fullstack Developer' },
+    { value: 'UI/UX Designer', label: 'UI/UX Designer' },
+    { value: 'Mobile App Developer', label: 'Mobile App Developer' },
+    { value: 'Machine Learning Engineer', label: 'Machine Learning Engineer' },
+    { value: 'Data Scientist', label: 'Data Scientist' },
+    { value: 'AI Developer', label: 'AI Developer' },
+    { value: 'Embedded Systems Engineer', label: 'Embedded Systems Engineer' },
+    { value: 'IoT Developer', label: 'IoT Developer' },
+    { value: 'Cloud Engineer', label: 'Cloud Engineer' },
+    { value: 'DevOps Engineer', label: 'DevOps Engineer' },
+    { value: 'Cybersecurity Analyst', label: 'Cybersecurity Analyst' },
+    { value: 'QA/Testing Engineer', label: 'QA/Testing Engineer' },
+    { value: 'Project Manager', label: 'Project Manager' },
+    { value: 'Technical Writer', label: 'Technical Writer' },
+    { value: 'AR/VR Developer', label: 'AR/VR Developer' },
+    { value: 'Blockchain Developer', label: 'Blockchain Developer' },
+    { value: 'Game Developer', label: 'Game Developer' },
+    { value: 'System Designer', label: 'System Designer' }
 ];
 
 const SpecializationForm = ({

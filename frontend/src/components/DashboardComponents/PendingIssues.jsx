@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
 import UserContext from '../../Context/UserContext';
-import { Info, AlertTriangle } from 'lucide-react';
 
 const PendingIssues = () => {
   const { user } = useContext(UserContext);
@@ -32,7 +31,9 @@ const PendingIssues = () => {
     sections.forEach((section) => {
       if (Array.isArray(project[section])) {
         project[section].forEach((task) => {
-          tasks.push({ ...task, dueTo: section });
+          if (task.teamMemberID === userId) {
+            tasks.push({ ...task, dueTo: section });
+          }
         });
       }
     });
