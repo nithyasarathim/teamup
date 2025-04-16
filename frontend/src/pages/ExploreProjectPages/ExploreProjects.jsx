@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../components/Header';
-import ProjectDetailModal from './ProjectDetailModal';
+import ProjectDetailModal from '../../components/ModalComponents/ProjectDetailModal';
 import UserContext from '../../Context/UserContext';
 
 const ExploreProjects = () => {

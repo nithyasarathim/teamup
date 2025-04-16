@@ -1,6 +1,6 @@
 import { Figma, Github, RefreshCw, X, Pencil } from 'lucide-react';
 import React, { useState, useEffect, useContext } from 'react';
-import AddTaskModal from './AddTaskModal';
+import AddTaskModal from '../ModalComponents/AddTaskModal';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
 import UserContext from '../../Context/UserContext';

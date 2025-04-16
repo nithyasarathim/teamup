@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AddProjectModal from './AddProjectModal';
+import AddProjectModal from '../ModalComponents/AddProjectModal';
 import { RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';

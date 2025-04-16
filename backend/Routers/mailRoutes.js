@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { sendEmail, getOutbox, getInbox } = require('../Controller/mailController');
+const { sendEmail, getOutbox, getInbox, markAsRead } = require('../Controller/mailController');
 
 router.post('/send', sendEmail);
-router.get('/outbox/:id', getOutbox);
-router.get('/inbox/:id', getInbox);
+router.post('/outbox', getOutbox);
+router.post('/inbox', getInbox);
+router.patch('/read', markAsRead);
 
 module.exports = router;

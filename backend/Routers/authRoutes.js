@@ -7,7 +7,8 @@ const {
     generateOTP,
     verifyOTP,
     login,
-    createaccount
+    createaccount,
+    getAllUserEmails
 } = require('../Controller/authController');
 
 
@@ -18,4 +19,5 @@ router.post('/generate-otp',generateOTP);
 router.post('/verify-otp',verifyOTP);
 router.post('/login',login);
 router.post('/createaccount',createaccount);
+router.get('/emails', getAllUserEmails);
 module.exports = router;

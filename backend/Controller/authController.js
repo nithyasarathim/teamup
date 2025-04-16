@@ -193,6 +193,17 @@ const createaccount = async (req, res) => {
     }
 }
 
+const getAllUserEmails = async (req, res) => {
+    try {
+      const users = await UsersData.find({}, 'email'); 
+      const emailList = users.map(user => user.email);
+      res.json(emailList);
+    } catch (err) {
+      console.error('Error fetching emails:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+
 module.exports = {
     checkAccount,
     resendOTP,
@@ -200,5 +211,6 @@ module.exports = {
     generateOTP,
     verifyOTP,
     login,
-    createaccount
+    createaccount,
+    getAllUserEmails
 };

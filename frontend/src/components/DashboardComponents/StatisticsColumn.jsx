@@ -5,13 +5,14 @@ import UserContext from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const StatisticsColumn = () => {
+const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail }) => {
   const { user } = useContext(UserContext);
   const userId = user?.id || '';
   const username = user?.username || "Guest";
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [notificationsCount, setNotificationsCount] = useState(0);
+  const [inboxCount, setInboxCount] = useState(0); 
 
   const [stats, setStats] = useState({
     totalProjects: 0,
@@ -20,8 +21,24 @@ const StatisticsColumn = () => {
   });
 
   useEffect(() => {
+    if (!user?.email) return;
+
+    fetch('http://localhost:8000/mail/inbox', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        const unread = (data || []).filter(mail => mail.status === false);
+        setInboxCount(unread.length);
+      })
+      .catch(err => console.error('Error fetching inbox:', err));
+  }, [user?.email,showMail ]);
+
+  useEffect(() => {
     if (!userId) return;
-  
+
     fetch('http://localhost:8000/projects/my-projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -31,8 +48,7 @@ const StatisticsColumn = () => {
       .then((data) => {
         const totalProjects = data.length;
         const currentProjects = data.filter(p => p.projectStatus !== 'completed').length;
-        console.log('Current Projects:', currentProjects);
-  
+
         let totalIssues = 0;
         data.forEach(project => {
           ['todo', 'onprogress', 'review'].forEach(section => {
@@ -45,12 +61,11 @@ const StatisticsColumn = () => {
             }
           });
         });
-  
+
         setStats({ totalProjects, currentProjects, totalIssues });
       })
       .catch((err) => console.error('Error:', err));
   }, [userId]);
-  
 
   useEffect(() => {
     if (!userId) return;
@@ -111,17 +126,22 @@ const StatisticsColumn = () => {
           <p className="text-sm text-gray-700 font-bold px-5">
             This is your space to collaborate, track progress, and get things done. Let’s build something great together!
           </p>
-          <div className="flex items-center justify-between bg-sky-50 border border-sky-200 px-5 py-3 rounded-lg w-fit shadow-md gap-3">
+
+          {/* ✅ Inbox with unread count */}
+          <div className="flex items-center justify-between bg-sky-50 border border-sky-200 px-5 py-3 rounded-lg w-fit shadow-md gap-3 cursor-pointer" onClick={() => { setShowMail(true) }}>
             <div className="flex items-center bg-sky-50 gap-2">
               <Mail size={22} className="text-sky-600" />
               <span className="text-sky-700 font-semibold">Inbox</span>
             </div>
-            <span className="font-bold bg-sky-600 px-3 py-1 text-white rounded-full text-sm shadow">0</span>
+            <span className="font-bold bg-sky-600 px-3 py-1 text-white rounded-full text-sm shadow">
+              {inboxCount}
+            </span>
           </div>
         </div>
         <img src={WelcomeImg} className="w-[35%] h-auto max-w-xs rounded-lg" alt="Welcome" />
       </motion.div>
 
+      {/* Statistics */}
       <div className="w-[95%] grid mx-auto grid-cols-1 md:grid-cols-3 gap-4 p-4">
         <div className="space-y-3">
           <motion.div
@@ -137,7 +157,6 @@ const StatisticsColumn = () => {
             <div className="text-sm ml-3">Total Projects</div>
           </motion.div>
 
-          {/* Current Projects */}
           <motion.div
             custom={1}
             initial="hidden"
@@ -151,7 +170,6 @@ const StatisticsColumn = () => {
             <div className="text-sm ml-3">Current Projects</div>
           </motion.div>
 
-          {/* Total Issues */}
           <motion.div
             custom={2}
             initial="hidden"
@@ -165,7 +183,6 @@ const StatisticsColumn = () => {
             <div className="text-sm ml-3">Total Issues</div>
           </motion.div>
 
-          {/* Notifications */}
           <motion.div
             custom={3}
             initial="hidden"
@@ -180,12 +197,11 @@ const StatisticsColumn = () => {
           </motion.div>
         </div>
 
-        {/* Quick Links */}
         <div className='col-span-2 my-auto'>
           <p className='text-center text-xl font-bold my-4'>Quick Links</p>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             {[
-              { icon: <Mail size={24} className='text-green-400' />, label: 'Send Mail' },
+              { icon: <Mail size={24} className='text-green-400' />, label: 'Send Mail',onClick:()=>{setShowAddMail(true)} },
               { icon: <Kanban size={24} className='text-yellow-400' />, label: 'Board', onClick: () => navigate('/projects') },
               { icon: <MessageSquare size={24} className='text-red-600' />, label: 'Add Post', onClick: handleAddPost },
               { icon: <Presentation size={24} className='text-sky-600' />, label: 'Discuss' },
