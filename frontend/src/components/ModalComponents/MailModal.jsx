@@ -161,10 +161,10 @@ const MailModal = ({ onClose }) => {
 
           {/* Content Grid */}
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 h-[70vh]'>
-            <div className='col-span-1'>
+            <div className='col-span-1 overflow-x-auto '>
               <EmailList />
             </div>
-            <div className='col-span-2'>
+            <div className='col-span-2 overflow-x-auto'>
               <EmailDetail />
             </div>
           </div>

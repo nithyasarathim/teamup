@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Mail, X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
+import UserContext from '../../Context/UserContext';
 
 const AddMailModal = ({ setShowAddMail }) => {
   const [recipient, setRecipient] = useState('');
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [allEmails, setAllEmails] = useState([]);
-
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
-  // Fetch all emails for suggestions
+  const { user } = useContext(UserContext);
   useEffect(() => {
     fetch('http://localhost:8000/auth/emails')
       .then(res => res.json())
@@ -27,30 +27,34 @@ const AddMailModal = ({ setShowAddMail }) => {
       return;
     }
 
+    const from = user?.email;
+    const to = recipient;
+
     setSending(true);
     fetch('http://localhost:8000/mail/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipient, subject, message }),
-    })
-      .then((res) => res.json())
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from, to, subject, message }),
+      })
+      .then(res => res.json())
       .then((data) => {
         setSending(false);
         if (data.success) {
-          setSuccessMessage('Mail sent successfully!');
+          toast.info('Mail sent successfully!');
           setRecipient('');
           setSubject('');
           setMessage('');
+          setShowAddMail(false);
         } else {
-          setSuccessMessage('Failed to send mail.');
         }
       })
       .catch((err) => {
         setSending(false);
-        setSuccessMessage('Error sending mail.');
+        toast.error('Error sending mail.');
         console.error('Error:', err);
       });
-  };
+    }      
+
 
   // Filter suggestions
   useEffect(() => {
@@ -59,8 +63,11 @@ const AddMailModal = ({ setShowAddMail }) => {
       return;
     }
     const matches = allEmails.filter(email =>
-      email.toLowerCase().includes(recipient.toLowerCase()) && email !== recipient
-    );
+        email.toLowerCase().includes(recipient.toLowerCase()) &&
+        email !== recipient &&
+        email !== user?.email
+      );
+      
     setFilteredEmails(matches);
   }, [recipient, allEmails]);
 
