@@ -13,6 +13,23 @@ const createProject = async (req, res) => {
   }
 };
 
+const deleteProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Project.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.status(200).json({ message: "Project deleted successfully", deleted });
+  } catch (err) {
+    console.error("Error deleting project:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 const getMyProjects = async (req, res) => {
   try {
     const user_Id = req.body.user;
@@ -111,8 +128,6 @@ const ListProjects = async (req, res) => {
     const filtered = projects.filter(
       (project) => project.teamMembers.length <= project.teamSize
     );
-    
-    
     if (filtered.length === 0) {
       return res.status(404).json({ message: "No open projects with available roles" });
     }
@@ -162,5 +177,5 @@ const updateProjectInfo = async (req, res) => {
 };
 
 
-module.exports = { createProject, getMyProjects, fetchProject, updateProjectTasks, addTasks, ListProjects, updateProjectInfo };
+module.exports = { createProject, getMyProjects, fetchProject, updateProjectTasks, addTasks, ListProjects, updateProjectInfo, deleteProject};
 

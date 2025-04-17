@@ -4,12 +4,13 @@ import ProjectsHeader from '../../components/ExploreProjectComponents/ProjectsHe
 import ProjectsList from '../../components/ProjectDashboardComponents/ProjectsList'
 
 const Projects = () => {
-  const [refreshTrigger, setRefreshTrigger] =useState(false);
+  const [showAddProjectModal, setShowAddProjectModal] = useState(false);
+
   return (
     <>
       <Header/>
-      <ProjectsHeader setRefreshTrigger={setRefreshTrigger} refreshTrigger={refreshTrigger}/>
-      <ProjectsList refreshTrigger={refreshTrigger}/>
+      <ProjectsHeader showAddProjectModal={showAddProjectModal} setShowAddProjectModal={setShowAddProjectModal}/>
+      <ProjectsList showAddProjectModal={showAddProjectModal}/>
     </>
   )
 }
