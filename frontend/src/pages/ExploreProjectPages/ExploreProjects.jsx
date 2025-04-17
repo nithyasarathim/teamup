@@ -24,13 +24,12 @@ const ExploreProjects = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({}), 
+          body: JSON.stringify({}),
         });
 
         if (!response.ok) throw new Error('Failed to fetch projects');
 
         const data = await response.json();
-        console.log('Fetched projects:', data);
         setProjects(data);
       } catch (err) {
         setError(err.message);
@@ -59,14 +58,19 @@ const ExploreProjects = () => {
           role.toLowerCase().includes(selectedRole.toLowerCase())
         )
       : true;
-  
+
     const notJoined = !project.teamMembers.some(
       (member) => member.userid === userId
     );
-  
-    return matchType && matchSkill && matchRole && notJoined && project.teamMembers.length < project.teamSize;
+
+    return (
+      matchType &&
+      matchSkill &&
+      matchRole &&
+      notJoined &&
+      project.teamMembers.length < project.teamSize
+    );
   });
-  
 
   return (
     <div>
@@ -107,6 +111,11 @@ const ExploreProjects = () => {
         <div className="text-center py-8 text-gray-600">Loading projects...</div>
       ) : error ? (
         <div className="text-center py-8 text-red-500">Error: {error}</div>
+      ) : filteredProjects.length === 0 ? (
+        <div className="text-center text-gray-500 py-16">
+          <p className="text-lg font-medium">No projects found matching your filters or availability.</p>
+          <p className="text-sm mt-2">Try adjusting the filters or come back later to explore new public projects.</p>
+        </div>
       ) : (
         <div className="p-6 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredProjects.map((project, index) => (

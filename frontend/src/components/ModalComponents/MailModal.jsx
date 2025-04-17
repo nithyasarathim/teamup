@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { X, Inbox, Send } from 'lucide-react';
+import { X, Inbox, Send, Trash } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import UserContext from '../../Context/UserContext';
+import { toast } from 'react-toastify';
 
 const MailModal = ({ onClose }) => {
   const { user } = useContext(UserContext);
@@ -17,22 +18,17 @@ const MailModal = ({ onClose }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email }),
       });
-
       const outboxRes = await fetch('http://localhost:8000/mail/outbox', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email }),
       });
-
       const inboxData = await inboxRes.json();
       const outboxData = await outboxRes.json();
-
       setEmails({
         inbox: inboxData,
         outbox: outboxData,
       });
-
-      // Initialize read status map from inbox
       const statusMap = {};
       inboxData.forEach(email => {
         statusMap[email._id] = email.status;
@@ -51,22 +47,35 @@ const MailModal = ({ onClose }) => {
 
   const handleEmailClick = async (email) => {
     setSelectedEmail(email);
+    console.log('Email clicked:', email);
 
     if (view === 'inbox' && !email.status) {
       try {
         await fetch('http://localhost:8000/mail/read', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: email._id }),
+          body: JSON.stringify({ id: email._id, email: user.email }),
         });
-
         setReadStatus(prev => ({ ...prev, [email._id]: true }));
-
-        // Optionally re-fetch to sync with DB
         fetchEmails();
       } catch (err) {
         console.error('Error marking email as read:', err);
       }
+    }
+  };
+
+  const handleDelete = async (emailId) => {
+    try {
+      await fetch('http://localhost:8000/mail/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailId, email: user.email, view }), 
+      });
+      setSelectedEmail(null);
+      toast.info('Email deleted successfully!');
+      fetchEmails(); 
+    } catch (err) {
+      console.error('Error deleting email:', err);
     }
   };
 
@@ -93,6 +102,9 @@ const MailModal = ({ onClose }) => {
               <strong>{view === 'inbox' ? 'From' : 'To'}:</strong> {view === 'inbox' ? email.from : email.to}
             </p>
             <p className='text-sm font-medium text-gray-800'>{email.subject}</p>
+            <p className='text-xs text-gray-400'>
+              <strong>Sent:</strong> {new Date(email.sentAt).toLocaleString()}
+            </p>
           </div>
         ))}
       </div>
@@ -100,21 +112,39 @@ const MailModal = ({ onClose }) => {
   };
 
   const EmailDetail = () => (
-    selectedEmail ? (
-      <div className='bg-white shadow-sm rounded-lg p-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300'>
-        <h2 className='text-lg font-semibold text-sky-700'>{selectedEmail.subject}</h2>
-        <p className='text-sm text-gray-600 mb-1'>
-          <strong>From:</strong> {selectedEmail.from || 'You'} | <strong>To:</strong> {selectedEmail.to || 'You'}
-        </p>
-        <hr className='my-2' />
-        <p className='text-sm text-gray-800 whitespace-pre-line'>{selectedEmail.message}</p>
+  selectedEmail ? (
+    <div className='bg-white shadow-sm rounded-lg p-4 h-full overflow-y-auto relative scrollbar-thin scrollbar-thumb-gray-300'>
+      <div className="flex justify-between items-start mb-2">
+        <div>
+          <h2 className='text-lg font-semibold text-sky-700'>{selectedEmail.subject}</h2>
+          <p className='text-sm text-gray-600'>
+            <strong>From:</strong> {selectedEmail.from || 'You'} <br />
+            <strong>To:</strong> {selectedEmail.to || 'You'}
+          </p>
+        </div>
+        <div className="text-xs text-gray-400 text-right">
+          <p><strong>Sent:</strong><br />{new Date(selectedEmail.sentAt).toLocaleString()}</p>
+        </div>
       </div>
-    ) : (
-      <div className='h-full bg-white shadow-sm rounded-lg flex items-center justify-center text-gray-400'>
-        Select a mail to read
-      </div>
-    )
-  );
+
+      <hr className='my-2' />
+      <p className='text-sm text-gray-800 whitespace-pre-line mb-4'>{selectedEmail.message}</p>
+
+      <button
+        onClick={() => handleDelete(selectedEmail._id)}
+        className='bottom-4 absolute right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow'
+      >
+        <Trash size={16} />
+      </button>
+
+    </div>
+  ) : (
+    <div className='h-full bg-white shadow-sm rounded-lg flex items-center justify-center text-gray-400'>
+      Select a mail to read
+    </div>
+  )
+);
+
 
   return (
     <AnimatePresence>
@@ -131,7 +161,6 @@ const MailModal = ({ onClose }) => {
           transition={{ duration: 0.3 }}
           className='relative bg-white rounded-2xl p-6 w-full max-w-screen-lg mx-auto shadow-lg'
         >
-          {/* Close Button */}
           <button
             onClick={onClose}
             className='absolute top-4 right-4 text-gray-400 hover:text-gray-600'
@@ -139,7 +168,6 @@ const MailModal = ({ onClose }) => {
             <X size={20} />
           </button>
 
-          {/* Inbox/Outbox Buttons */}
           <div className='flex items-center gap-4 mb-4'>
             <button
               onClick={() => { setView('inbox'); setSelectedEmail(null); }}
@@ -159,7 +187,6 @@ const MailModal = ({ onClose }) => {
             </button>
           </div>
 
-          {/* Content Grid */}
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 h-[70vh]'>
             <div className='col-span-1 overflow-x-auto '>
               <EmailList />

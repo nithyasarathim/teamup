@@ -83,7 +83,6 @@ const generateOTP =  async (req, res) => {
         }
         const otp = generate_OTP();
         otpStore[email] = { otp, expiresAt: Date.now() + 10 * 60 * 1000 }; 
-
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
@@ -103,19 +102,15 @@ const verifyOTP =  (req, res) => {
         if (!otpStore[email]) {
             return res.status(400).json({ message: 'OTP expired or not generated' });
         }
-
         const storedOtp = otpStore[email];
         console.log(`Stored OTP: ${storedOtp.otp}, Received OTP: ${otp}`);
-
         if (Date.now() > storedOtp.expiresAt) {
             delete otpStore[email];
             return res.status(400).json({ message: 'OTP has expired' });
         }
-
         if (storedOtp.otp !== String(otp)) {
             return res.status(401).json({ message: 'Invalid OTP' });
         }
-
         delete otpStore[email];
         res.status(200).json({ message: 'OTP verified successfully' });
     } catch (e) {
@@ -133,7 +128,6 @@ const login =  async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid password' });
         }
-
         const tokenPayload = {
             id: user._id,
             username: user.username,
@@ -144,7 +138,6 @@ const login =  async (req, res) => {
             isVerified: user.isVerified,
             isFaculty: user.isFaculty,
             notifications: user.notifications,
-            
         };
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.status(200).json({ message: 'Login successful',token });
@@ -156,21 +149,15 @@ const login =  async (req, res) => {
 const createaccount = async (req, res) => {
     try {
         const { username, email, password, department, skills, role } = req.body;
-
         if (!username) {
             return res.status(400).json({ message: 'Username is required' });
         }
-
         const existingUser = await UsersData.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Extract values from skills array (if skills are provided)
         const processedSkills = skills ? skills.map(skill => skill.value) : [];
-
         const newUser = new UsersData({
             username,
             email,
