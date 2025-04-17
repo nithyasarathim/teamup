@@ -4,7 +4,7 @@ import TestImg from '../../assets/stockimg.jpg';
 const DigestList = ({ digests, setSelectedDigest, filterCategory, setFilterCategory }) => {
   return (
     <div className='col-span-2 h-full flex'>
-      <div className='h-[90%] w-full bg-white shadow-sm m-2 rounded-lg p-2'>
+      <div className='h-[520px] w-full bg-white shadow-sm  rounded-lg p-2'>
         <div className='mb-4 px-3 flex items-center justify-between border-b pb-2'>
           <h2 className='text-lg font-semibold text-sky-600'>Digests</h2>
           <select
