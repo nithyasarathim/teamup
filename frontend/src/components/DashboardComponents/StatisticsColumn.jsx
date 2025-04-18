@@ -5,7 +5,7 @@ import UserContext from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail }) => {
+const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail, setShowBoard, setShowDiscuss }) => {
   const { user } = useContext(UserContext);
   const userId = user?.id || '';
   const username = user?.username || "Guest";
@@ -111,7 +111,6 @@ const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail }) => {
 
   return (
     <div className="welcome w-full h-full col-span-3">
-      {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
@@ -127,7 +126,6 @@ const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail }) => {
             This is your space to collaborate, track progress, and get things done. Let’s build something great together!
           </p>
 
-          {/* ✅ Inbox with unread count */}
           <div className="flex items-center justify-between bg-sky-50 border border-sky-200 px-5 py-3 rounded-lg w-fit shadow-md gap-3 cursor-pointer" onClick={() => { setShowMail(true) }}>
             <div className="flex items-center bg-sky-50 gap-2">
               <Mail size={22} className="text-sky-600" />
@@ -141,7 +139,6 @@ const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail }) => {
         <img src={WelcomeImg} className="w-[35%] h-auto max-w-xs rounded-lg" alt="Welcome" />
       </motion.div>
 
-      {/* Statistics */}
       <div className="w-[95%] grid mx-auto grid-cols-1 md:grid-cols-3 gap-4 p-4">
         <div className="space-y-3">
           <motion.div
@@ -202,9 +199,9 @@ const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail }) => {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             {[
               { icon: <Mail size={24} className='text-green-400' />, label: 'Send Mail',onClick:()=>{setShowAddMail(true)} },
-              { icon: <Kanban size={24} className='text-yellow-400' />, label: 'Board', onClick: () => navigate('/projects') },
+              { icon: <Kanban size={24} className='text-yellow-400' />, label: 'Board', onClick: () =>{setShowBoard(true)} },
               { icon: <MessageSquare size={24} className='text-red-600' />, label: 'Add Post', onClick: handleAddPost },
-              { icon: <Presentation size={24} className='text-sky-600' />, label: 'Discuss' },
+              { icon: <Presentation size={24} className='text-sky-600' />, label: 'Discuss', onClick: ()=>{setShowDiscuss(true)} },
             ].map((item, index) => (
               <motion.div
                 key={index}
