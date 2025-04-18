@@ -11,6 +11,7 @@ import UserDashboard from './pages/DashboardPages/StudentDashboard.jsx';
 import DigestPage from './pages/DigestPages/DigestPage.jsx';
 import ExploreProjects from './pages/ExploreProjectPages/ExploreProjects.jsx';
 import ProjectsDashboard from './pages/ProjectDashboardPages/ProjectDashboard';
+import ProjectDiscussion from './pages/ProjectDiscussionPages/ProjectDiscussion';
 import Projects from './pages/ProjectDashboardPages/Projects.jsx';
 import UserContext from './Context/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
@@ -38,14 +39,13 @@ const App = () => {
         <Route path='/login' element={token ? <Navigate to='/dashboard' replace /> : <LogIn setFPwdStatus={setFPwdStatus} />} />
         <Route path='/forgot-password' element={fPwdStatus ? <ForgotPwd setOtpStatus={setOtpStatus} /> : <Error403 />} />
         <Route path='/verify-code' element={otpStatus ? <VerifyCode setRPwdStatus={setRPwdStatus} /> : <Error403 />} />
-        <Route path='/reset-password' element={rPwdStatus ? <ResetPwd setOtpStatus={setOtpStatus} setFPwdStatus={setFPwdStatus} setRPwdStatus={setRPwdStatus} /> : <Error403 />} />
-       
-        
+        <Route path='/reset-password' element={rPwdStatus ? <ResetPwd setOtpStatus={setOtpStatus} setFPwdStatus={setFPwdStatus} setRPwdStatus={setRPwdStatus} /> : <Error403 />} />  
         <Route path='/dashboard' element={token ? (user?.isFaculty ? <FacultyDashboard /> : <UserDashboard />) : <Navigate to='/login' replace />} />
         <Route path='/digests' element={token ? <DigestPage /> : <Navigate to='/login' replace />} />
         <Route path='/explore-projects' element={token ? <ExploreProjects /> : <Navigate to='/login' replace />} />
         <Route path='/projects' element={token ? <Projects /> : <Navigate to='/login' replace />} />
         <Route path='/project-dashboard/:id' element={token ? <ProjectsDashboard /> : <Navigate to='/login' replace />} />
+        <Route path='/discussion/:id' element={token ? <ProjectDiscussion/>:<Navigate to='/login' replace />} />
         <Route path='/' element={<Navigate to='/dashboard' replace />} />
       </Routes>
     </Router>

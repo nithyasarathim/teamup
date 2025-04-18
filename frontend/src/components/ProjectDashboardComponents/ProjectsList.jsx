@@ -23,7 +23,7 @@ const ProjectsList = ({ showAddProjectModal }) => {
       .then((res) => res.json())
       .then((data) => setProjects(data))
       .catch((err) => console.error('Error fetching projects:', err));
-  }, [showAddProjectModal]);
+  }, [showAddProjectModal, Id]);
 
   const handleProjectClick = (id) => {
     navigate(`/project-dashboard/${id}`);

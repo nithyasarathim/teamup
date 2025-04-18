@@ -221,14 +221,14 @@ const Header = () => {
                       <motion.button 
                         whileTap={{ scale: 0.95 }} 
                         className='bg-green-300 hover:bg-green-600 duration-400 text-green-900 text-xs font-semibold px-3 py-1 rounded'
-                        onClick={() => handleAccept(note)}
+                        onClick={() => {handleAccept(note);fetchNotifications()}}
                       >
                         Accept
                       </motion.button>
                       <motion.button 
                         whileTap={{ scale: 0.95 }} 
                         className='bg-red-300 hover:bg-red-600 duration-200 text-red-900 text-xs font-semibold px-3 py-1 rounded'
-                        onClick={() => handleReject(note)}
+                        onClick={() => {handleReject(note);fetchNotifications()} }
                       >
                         Decline
                       </motion.button>
