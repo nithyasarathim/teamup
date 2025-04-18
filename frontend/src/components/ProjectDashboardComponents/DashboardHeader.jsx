@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Select from 'react-select';
 import UserContext from '../../Context/UserContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardHeader = ({ data, setRefresh, refresh }) => {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
@@ -15,6 +16,8 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
   const [referenceLink, setReferenceLink] = useState('');
   const [skillsRequired, setSkillsRequired] = useState([]);
   const [rolesRequired, setRolesRequired] = useState([]);
+
+  const navigate = useNavigate();
 
   const user = useContext(UserContext);
   const leadId = data?.teamLeadId;
@@ -68,8 +71,66 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
     }
   };
 
-  const roleOptions = [ /* ... your role options ... */ ];
-  const skillOptions = [ /* ... your skill options ... */ ];
+  const roleOptions = [
+    { value: 'Frontend Developer', label: 'Frontend Developer' },
+    { value: 'Backend Developer', label: 'Backend Developer' },
+    { value: 'Fullstack Developer', label: 'Fullstack Developer' },
+    { value: 'UI/UX Designer', label: 'UI/UX Designer' },
+    { value: 'Mobile App Developer', label: 'Mobile App Developer' },
+    { value: 'Machine Learning Engineer', label: 'Machine Learning Engineer' },
+    { value: 'Data Scientist', label: 'Data Scientist' },
+    { value: 'AI Developer', label: 'AI Developer' },
+    { value: 'Embedded Systems Engineer', label: 'Embedded Systems Engineer' },
+    { value: 'IoT Developer', label: 'IoT Developer' },
+    { value: 'Cloud Engineer', label: 'Cloud Engineer' },
+    { value: 'DevOps Engineer', label: 'DevOps Engineer' },
+    { value: 'Cybersecurity Analyst', label: 'Cybersecurity Analyst' },
+    { value: 'QA/Testing Engineer', label: 'QA/Testing Engineer' },
+    { value: 'Project Manager', label: 'Project Manager' },
+    { value: 'Technical Writer', label: 'Technical Writer' },
+    { value: 'AR/VR Developer', label: 'AR/VR Developer' },
+    { value: 'Blockchain Developer', label: 'Blockchain Developer' },
+    { value: 'Game Developer', label: 'Game Developer' },
+    { value: 'System Designer', label: 'System Designer' },
+  ];  
+
+  const skillOptions = [
+    { value: 'HTML', label: 'HTML' },
+    { value: 'CSS', label: 'CSS' },
+    { value: 'JavaScript', label: 'JavaScript' },
+    { value: 'React', label: 'React' },
+    { value: 'Vue.js', label: 'Vue.js' },
+    { value: 'Next.js', label: 'Next.js' },
+    { value: 'Node.js', label: 'Node.js' },
+    { value: 'Express.js', label: 'Express.js' },
+    { value: 'Python', label: 'Python' },
+    { value: 'Django', label: 'Django' },
+    { value: 'Flask', label: 'Flask' },
+    { value: 'Java', label: 'Java' },
+    { value: 'Spring Boot', label: 'Spring Boot' },
+    { value: 'C++', label: 'C++' },
+    { value: 'MySQL', label: 'MySQL' },
+    { value: 'MongoDB', label: 'MongoDB' },
+    { value: 'Firebase', label: 'Firebase' },
+    { value: 'Git', label: 'Git' },
+    { value: 'GitHub', label: 'GitHub' },
+    { value: 'Figma', label: 'Figma' },
+    { value: 'Canva', label: 'Canva' },
+    { value: 'REST API', label: 'REST API' },
+    { value: 'GraphQL', label: 'GraphQL' },
+    { value: 'Linux', label: 'Linux' },
+    { value: 'AWS', label: 'AWS' },
+    { value: 'Docker', label: 'Docker' },
+    { value: 'Postman', label: 'Postman' },
+    { value: 'Machine Learning', label: 'Machine Learning' },
+    { value: 'Deep Learning', label: 'Deep Learning' },
+    { value: 'NLP', label: 'NLP' },
+    { value: 'TensorFlow', label: 'TensorFlow' },
+    { value: 'OpenCV', label: 'OpenCV' },
+    { value: 'Data Structures', label: 'Data Structures' },
+    { value: 'Algorithms', label: 'Algorithms' },
+    { value: 'Problem Solving', label: 'Problem Solving' },
+  ];
 
   return (
     <div className="w-full bg-white p-4 flex items-center justify-between shadow-sm">
@@ -87,7 +148,7 @@ const DashboardHeader = ({ data, setRefresh, refresh }) => {
 
         <button
           className="px-4 py-1 bg-sky-50 text-sm rounded-lg hover:bg-sky-100"
-          onClick={() => toast.info('Hang tight ! Coming soon !')}
+          onClick={() => {const id=data._id; navigate(`/discussion/${id}`);}}
         >
           Discuss
         </button>

@@ -2,26 +2,41 @@ import React from "react";
 import Select from "react-select";
 
 const skillOptions = [
-  { value: 'Frontend Developer', label: 'Frontend Developer' },
-    { value: 'Backend Developer', label: 'Backend Developer' },
-    { value: 'Fullstack Developer', label: 'Fullstack Developer' },
-    { value: 'UI/UX Designer', label: 'UI/UX Designer' },
-    { value: 'Mobile App Developer', label: 'Mobile App Developer' },
-    { value: 'Machine Learning Engineer', label: 'Machine Learning Engineer' },
-    { value: 'Data Scientist', label: 'Data Scientist' },
-    { value: 'AI Developer', label: 'AI Developer' },
-    { value: 'Embedded Systems Engineer', label: 'Embedded Systems Engineer' },
-    { value: 'IoT Developer', label: 'IoT Developer' },
-    { value: 'Cloud Engineer', label: 'Cloud Engineer' },
-    { value: 'DevOps Engineer', label: 'DevOps Engineer' },
-    { value: 'Cybersecurity Analyst', label: 'Cybersecurity Analyst' },
-    { value: 'QA/Testing Engineer', label: 'QA/Testing Engineer' },
-    { value: 'Project Manager', label: 'Project Manager' },
-    { value: 'Technical Writer', label: 'Technical Writer' },
-    { value: 'AR/VR Developer', label: 'AR/VR Developer' },
-    { value: 'Blockchain Developer', label: 'Blockchain Developer' },
-    { value: 'Game Developer', label: 'Game Developer' },
-    { value: 'System Designer', label: 'System Designer' }
+  { value: 'HTML', label: 'HTML' },
+  { value: 'CSS', label: 'CSS' },
+  { value: 'JavaScript', label: 'JavaScript' },
+  { value: 'React', label: 'React' },
+  { value: 'Vue.js', label: 'Vue.js' },
+  { value: 'Next.js', label: 'Next.js' },
+  { value: 'Node.js', label: 'Node.js' },
+  { value: 'Express.js', label: 'Express.js' },
+  { value: 'Python', label: 'Python' },
+  { value: 'Django', label: 'Django' },
+  { value: 'Flask', label: 'Flask' },
+  { value: 'Java', label: 'Java' },
+  { value: 'Spring Boot', label: 'Spring Boot' },
+  { value: 'C++', label: 'C++' },
+  { value: 'MySQL', label: 'MySQL' },
+  { value: 'MongoDB', label: 'MongoDB' },
+  { value: 'Firebase', label: 'Firebase' },
+  { value: 'Git', label: 'Git' },
+  { value: 'GitHub', label: 'GitHub' },
+  { value: 'Figma', label: 'Figma' },
+  { value: 'Canva', label: 'Canva' },
+  { value: 'REST API', label: 'REST API' },
+  { value: 'GraphQL', label: 'GraphQL' },
+  { value: 'Linux', label: 'Linux' },
+  { value: 'AWS', label: 'AWS' },
+  { value: 'Docker', label: 'Docker' },
+  { value: 'Postman', label: 'Postman' },
+  { value: 'Machine Learning', label: 'Machine Learning' },
+  { value: 'Deep Learning', label: 'Deep Learning' },
+  { value: 'NLP', label: 'NLP' },
+  { value: 'TensorFlow', label: 'TensorFlow' },
+  { value: 'OpenCV', label: 'OpenCV' },
+  { value: 'Data Structures', label: 'Data Structures' },
+  { value: 'Algorithms', label: 'Algorithms' },
+  { value: 'Problem Solving', label: 'Problem Solving' },
 ];
 
 const SpecializationForm = ({
@@ -34,7 +49,6 @@ const SpecializationForm = ({
 }) => {
   return (
     <div>
-      {/* Department Selection */}
       <label className="font-bold m-2">Department</label>
       <select
         className="w-full border p-2 mb-4 rounded"
@@ -52,7 +66,6 @@ const SpecializationForm = ({
         <option value="CSBS">Department of CSBS</option>
       </select>
 
-      {/* Skills Selection */}
       <label className="font-bold m-2">Skills</label>
       <Select
         options={skillOptions}
@@ -65,7 +78,6 @@ const SpecializationForm = ({
         }
       />
 
-      {/* Buttons: Back & Signup */}
       <div className="flex gap-4">
         <button
           onClick={handleBack}

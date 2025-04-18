@@ -2,18 +2,11 @@ import React from 'react';
 import { Figma, Github } from 'lucide-react';
 import GroupDiscussion from './../../assets/GroupDiscussion.png';
 
-const DiscussStatistics = () => {
-  const teamMembers = [
-    { name: 'Nithyasarathi', role: 'Developer' },
-    { name: 'Ajay', role: 'Designer' },
-    { name: 'Priya', role: 'Tester' },
-    { name: 'Divya', role: 'Manager' },
-    { name: 'Suresh', role: 'Developer' },
-  ];
+const DiscussStatistics = ({teamMembers, ProjectName}) => {
 
   return (
     <div className='col-span-2 p-2 h-[100%] border border-gray-300 rounded-lg shadow-md bg-white'>
-      <h1 className='text-xl font-semibold text-sky-600 border-b border-sky-600 mt-2'>Discussions</h1>
+      <h1 className='text-xl font-semibold text-sky-600 border-b border-sky-600 mt-2'>{ProjectName}</h1>
 
       <div className='flex'>
         <img src={GroupDiscussion} alt="Group Discussion" className='w-[80%] m-auto h-[80%] rounded-lg' />
