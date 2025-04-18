@@ -2,11 +2,11 @@ import React from 'react';
 import { Figma, Github } from 'lucide-react';
 import GroupDiscussion from './../../assets/GroupDiscussion.png';
 
-const DiscussStatistics = ({teamMembers, ProjectName}) => {
+const DiscussStatistics = ({teamMembers, projectName}) => {
 
   return (
     <div className='col-span-2 p-2 h-[100%] border border-gray-300 rounded-lg shadow-md bg-white'>
-      <h1 className='text-xl font-semibold text-sky-600 border-b border-sky-600 mt-2'>{ProjectName}</h1>
+      <h1 className='text-xl font-semibold text-sky-600 border-b border-sky-600 mt-2'>{projectName}</h1>
 
       <div className='flex'>
         <img src={GroupDiscussion} alt="Group Discussion" className='w-[80%] m-auto h-[80%] rounded-lg' />
@@ -32,7 +32,7 @@ const DiscussStatistics = ({teamMembers, ProjectName}) => {
             >
               <Figma className='w-4 h-4 text-gray-700' />
             </a>
-            <button className='text-sm bg-sky-600 text-white px-3 py-1 rounded-md hover:bg-sky-700 transition-all duration-200'>
+            <button className='text-sm bg-sky-500 text-white px-3 py-1 rounded-md hover:bg-sky-700 transition-all duration-200'>
               Manage
             </button>
           </div>

@@ -112,9 +112,13 @@ const ExploreProjects = () => {
       ) : error ? (
         <div className="text-center py-8 text-red-500">Error: {error}</div>
       ) : filteredProjects.length === 0 ? (
-        <div className="text-center text-gray-500 py-16">
-          <p className="text-lg font-medium">No projects found matching your filters or availability.</p>
-          <p className="text-sm mt-2">Try adjusting the filters or come back later to explore new public projects.</p>
+        <div className="flex items-center justify-center h-[60vh] text-center">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-2">No projects found matching your filters or availability.</h2>
+            <p className="text-sm text-gray-500">
+              Try adjusting the filters or come back later to explore new public projects.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="p-6 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

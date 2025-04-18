@@ -45,7 +45,6 @@ const emailSchema = new Schema({
   },
 });
 
-// User Schema
 const userSchema = new Schema(
   {
     username: {

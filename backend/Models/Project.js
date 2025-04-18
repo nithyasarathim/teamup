@@ -20,6 +20,17 @@ const TaskSchema = new mongoose.Schema({
   teamMemberID: String,
 });
 
+const messageSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  message: { type: String, required: true },
+  time: { type: Date, default: Date.now }
+});
+
+const fileSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true }
+});
+
 const ProjectSchema = new mongoose.Schema({
   projectName: { type: String, required: true },
   teamName: { type: String, required: true },
@@ -30,7 +41,7 @@ const ProjectSchema = new mongoose.Schema({
   projectType: String,
   projectDuration: String,
   projectStatus: String,
-  teamMembers:{type:[TeamMemberSchema],default:[]},
+  teamMembers: { type: [TeamMemberSchema], default: [] },
   skills: [String],
   projectLink: { type: String, default: "" },
   prototypeLink: { type: String, default: "" },
@@ -40,6 +51,8 @@ const ProjectSchema = new mongoose.Schema({
   review: { type: [TaskSchema], default: [] },
   onprogress: { type: [TaskSchema], default: [] },
   done: { type: [TaskSchema], default: [] },
+  messages: { type: [messageSchema], default: [] }, 
+  files: { type: [fileSchema], default: [] },
 }, {
   timestamps: true
 });

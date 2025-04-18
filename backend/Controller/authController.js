@@ -157,13 +157,13 @@ const createaccount = async (req, res) => {
             return res.status(400).json({ message: 'Email already exists' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const processedSkills = skills ? skills.map(skill => skill.value) : [];
+        const processedSkills = skills ? skills : [];
         const newUser = new UsersData({
             username,
             email,
             password: hashedPassword,
             department,
-            skills: processedSkills, // Fixed skills format
+            skills: processedSkills, 
             role: role || 'student',
             isFaculty: false,
             isVerified: false,
