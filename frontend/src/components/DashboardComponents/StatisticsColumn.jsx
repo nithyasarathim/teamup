@@ -5,7 +5,7 @@ import UserContext from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail, setShowBoard, setShowDiscuss }) => {
+const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail, setShowBoard, setShowDiscuss, setShowAddPost }) => {
   const { user } = useContext(UserContext);
   const userId = user?.id || '';
   const username = user?.username || "Guest";
@@ -80,7 +80,7 @@ const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail, setShowBoard,
   }, [userId]);
 
   const handleAddPost = () => {
-    console.log("Add post triggered");
+    
   };
 
   const statCardVariants = {
@@ -200,7 +200,7 @@ const StatisticsColumn = ({ setShowMail, showMail, setShowAddMail, setShowBoard,
             {[
               { icon: <Mail size={24} className='text-green-400' />, label: 'Send Mail',onClick:()=>{setShowAddMail(true)} },
               { icon: <Kanban size={24} className='text-yellow-400' />, label: 'Board', onClick: () =>{setShowBoard(true)} },
-              { icon: <MessageSquare size={24} className='text-red-600' />, label: 'Add Post', onClick: handleAddPost },
+              { icon: <MessageSquare size={24} className='text-red-600' />, label: 'Add Post', onClick: () =>{setShowAddPost(true)} },
               { icon: <Presentation size={24} className='text-sky-600' />, label: 'Discuss', onClick: ()=>{setShowDiscuss(true)} },
             ].map((item, index) => (
               <motion.div

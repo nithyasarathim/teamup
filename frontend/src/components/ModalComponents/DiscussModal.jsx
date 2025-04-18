@@ -35,7 +35,7 @@ const DiscussModal = ({ setShowDiscuss, showAddProjectModal }) => {
         transition={{ duration: 0.3 }}
         className="bg-white w-full max-w-6xl p-6 rounded-xl shadow-lg max-h-[90vh] overflow-y-auto relative"
       >
-        {/* Header */}
+        
         <div className="flex justify-between items-center mb-6 border-b pb-3">
           <h1 className="text-xl font-semibold text-sky-600">Select a Project</h1>
           <button

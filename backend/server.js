@@ -9,6 +9,8 @@ const projectRoutes = require('./Routers/projectRoutes');
 const notifyRoutes = require('./Routers/notifyRoutes');
 const discussRoutes = require('./Routers/discussRoutes');
 const mailRoutes = require('./Routers/mailRoutes');
+const postRoutes = require('./Routers/postRoutes');
+
 const { initializeSocket } = require('./socket');
 
 const app = express();
@@ -22,6 +24,8 @@ app.use('/projects', projectRoutes);
 app.use('/notify', notifyRoutes);
 app.use('/mail', mailRoutes);
 app.use('/discuss', discussRoutes);
+app.use('/post', postRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
