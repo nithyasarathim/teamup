@@ -53,7 +53,6 @@ const Header = () => {
   };
   
   const handleAccept = (note) => {
-
     fetch(`http://localhost:8000/notify/accept`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -76,9 +75,8 @@ const Header = () => {
       }
     })
     .catch(err =>{});
-};
+  };
 
-  
   const handleReject = (note) => {
     fetch(`http://localhost:8000/notify/reject`, {
       method: 'POST',
@@ -92,7 +90,6 @@ const Header = () => {
       })
       .catch(err =>{});
   };
-  
 
   useEffect(() => {
     fetchNotifications();
@@ -109,6 +106,8 @@ const Header = () => {
     { to: "/projects", icon: <SquareKanban size={20} />, label: "Projects" },
   ];
 
+  const isDigestRoute = location.pathname.startsWith("/digests");
+
   return (
     <div className='justify-between flex items-center p-4 relative'>
       <img src={Logo} alt='Logo' className='h-11 m-0' />
@@ -116,7 +115,13 @@ const Header = () => {
       <div className='navLinks h-12 center items-center bg-sky-50 px-3 rounded-xl gap-6 hidden md:flex'>
         {navLinks.map(({ to, icon, label }) => (
           <div key={to}
-            className={`flex items-center gap-1 cursor-pointer text-sm duration-300 ${location.pathname === to ? "text-sky-500" : "text-black hover:text-sky-700"}`}
+            className={`flex items-center gap-1 cursor-pointer text-sm duration-300 ${
+              (to === "/digests" && isDigestRoute) 
+                ? "text-sky-500 animate-pulse" 
+                : location.pathname === to 
+                ? "text-sky-500" 
+                : "text-black hover:text-sky-700"
+            }`}
             onClick={() => navigate(to)}>
             {icon}<p>{label}</p>
           </div>
@@ -157,10 +162,22 @@ const Header = () => {
             >
               <X size={24} className='cursor-pointer self-end' onClick={() => setListOpen(false)} />
               {navLinks.map(({ to, icon, label }) => (
-                <div key={to}
-                  className={`flex items-center gap-1 cursor-pointer text-sm duration-300 ${location.pathname === to ? "text-sky-500" : "text-black hover:text-sky-700"}`}
-                  onClick={() => navigate(to)}>
-                  {icon}<p>{label}</p>
+                <div
+                  key={to}
+                  className={`flex items-center gap-1 cursor-pointer text-sm duration-300 ${
+                    (to === "/digests" && isDigestRoute)
+                      ? "text-sky-500 animate-pulse"
+                      : location.pathname === to
+                      ? "text-sky-500"
+                      : "text-black hover:text-sky-700"
+                  }`}
+                  onClick={() => {
+                    navigate(to);
+                    setListOpen(false);
+                  }}
+                >
+                  {icon}
+                  <p>{label}</p>
                 </div>
               ))}
             </motion.div>
@@ -205,35 +222,35 @@ const Header = () => {
                 <div className='flex flex-col gap-2 overflow-y-auto'>
                   {notifications.map((note, index) => (
                     <motion.div
-                    key={index}
-                    className='p-3 border border-gray-300 shadow-xs rounded bg-white'
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <p className='text-sm font-medium text-black mb-2'>
-                      <span className='text-sky-600 font-semibold'>{note.username}</span> has requested to join the <span className='text-sky-600 font-semibold'>{note.projectName}</span> project as a <span className='text-sky-600 font-semibold'>{note.role}</span>. Would you like to approve the request?
-                    </p>
-                    <p className='text-xs text-gray-500 italic'>
-                      {new Date(note.timestamp).toLocaleString()}
-                    </p>
-                    <div className='flex gap-3 mt-2 justify-end'>
-                      <motion.button 
-                        whileTap={{ scale: 0.95 }} 
-                        className='bg-green-300 hover:bg-green-600 duration-400 text-green-900 text-xs font-semibold px-3 py-1 rounded'
-                        onClick={() => {handleAccept(note);fetchNotifications()}}
-                      >
-                        Accept
-                      </motion.button>
-                      <motion.button 
-                        whileTap={{ scale: 0.95 }} 
-                        className='bg-red-300 hover:bg-red-600 duration-200 text-red-900 text-xs font-semibold px-3 py-1 rounded'
-                        onClick={() => {handleReject(note);fetchNotifications()} }
-                      >
-                        Decline
-                      </motion.button>
-                    </div>
-                  </motion.div>                  
+                      key={index}
+                      className='p-3 border border-gray-300 shadow-xs rounded bg-white'
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <p className='text-sm font-medium text-black mb-2'>
+                        <span className='text-sky-600 font-semibold'>{note.username}</span> has requested to join the <span className='text-sky-600 font-semibold'>{note.projectName}</span> project as a <span className='text-sky-600 font-semibold'>{note.role}</span>. Would you like to approve the request?
+                      </p>
+                      <p className='text-xs text-gray-500 italic'>
+                        {new Date(note.timestamp).toLocaleString()}
+                      </p>
+                      <div className='flex gap-3 mt-2 justify-end'>
+                        <motion.button 
+                          whileTap={{ scale: 0.95 }} 
+                          className='bg-green-300 hover:bg-green-600 duration-400 text-green-900 text-xs font-semibold px-3 py-1 rounded'
+                          onClick={() => {handleAccept(note);fetchNotifications()}}
+                        >
+                          Accept
+                        </motion.button>
+                        <motion.button 
+                          whileTap={{ scale: 0.95 }} 
+                          className='bg-red-300 hover:bg-red-600 duration-200 text-red-900 text-xs font-semibold px-3 py-1 rounded'
+                          onClick={() => {handleReject(note);fetchNotifications()} }
+                        >
+                          Decline
+                        </motion.button>
+                      </div>
+                    </motion.div>                  
                   ))}
                 </div>
               ) : (

@@ -7,11 +7,12 @@ const {
   deletePost,
   likePost,
   unlikePost,
-} = require('../controllers/postController');
+  upload
+} = require('../Controller/postController');
 
 router.get('/get', getAllPosts);             
 router.get('/get/:id', getPostById);          
-router.post('/create', createPost);             
+router.post('/create',upload.single('image'), createPost);             
 router.delete('/delete/:id', deletePost);        
 router.put('/like/:id', likePost);        
 router.put('/unlike/:id', unlikePost);    

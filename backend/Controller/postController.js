@@ -1,6 +1,71 @@
-const Post = require('../models/Post');
-const { emitPostEvent } = require('../socket');
+const fs = require('fs');
+const path = require('path');
+const Post = require('../Models/Posts');
+const { emitPostEvent } = require('../socket'); 
+const multer = require('multer');
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/');
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${file.fieldname}${ext}`);
+  }
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'), false);
+    }
+  }
+});
+
+const createPost = async (req, res) => {
+  try {
+    const { username, title, description, category, link } = req.body;
+    const imagePath = req.file ? req.file.path : null;
+
+    if (!username || !title || !description || !category || !imagePath) {
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path); 
+      }
+      return res.status(400).json({ 
+        error: 'All fields are required, including image' 
+      });
+    }
+
+    const newPost = new Post({ 
+      username,
+      title,
+      description,
+      category,
+      link: link || '',
+      image: imagePath.replace('public', '') 
+    });
+
+    await newPost.save();
+    emitPostEvent('newPost', newPost);
+
+    res.status(201).json({ 
+      message: 'Post created successfully', 
+      post: newPost 
+    });
+
+  } catch (error) {
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path); 
+    }
+    res.status(500).json({ 
+      message: 'Error creating post',
+      error: error.message 
+    });
+  }
+};
 
 const getAllPosts = async (req, res) => {
   try {
@@ -19,25 +84,6 @@ const getPostById = async (req, res) => {
     res.status(200).json(post);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching post' });
-  }
-};
-
-
-const createPost = async (req, res) => {
-  try {
-    const { username, title, description, category, image } = req.body;
-
-    if (!username || !title || !description || !category) {
-      return res.status(400).json({ error: 'All fields except image are required' });
-    }
-
-    const newPost = new Post({ username, title, description, category, image });
-    await newPost.save();
-    emitPostEvent('newPost', newPost);
-
-    res.status(201).json({ message: 'Post created successfully', post: newPost });
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating post' });
   }
 };
 
@@ -105,4 +151,5 @@ module.exports = {
   deletePost,
   likePost,
   unlikePost,
+  upload
 };

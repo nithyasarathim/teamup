@@ -12,6 +12,7 @@
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@tailwindcss/vite": "^4.0.9",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.6.3",
     "jwt-decode": "^4.0.0",

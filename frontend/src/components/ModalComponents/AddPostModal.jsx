@@ -1,162 +1,226 @@
-//addpostmodel.jsx
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { X } from 'lucide-react';
-import { useContext } from 'react';
 import UserContext from '../../Context/UserContext';
 
-const AddPostModal = ({ setShowAddPost }) => {
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
-  const [sending, setSending] = useState(false);
+const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
   const { user } = useContext(UserContext);
+  const [formData, setFormData] = useState({
+    username: user?.name || '', // Assuming user.id is the username
+    title: '',
+    category: '',
+    description: '',
+    link: ''
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePostSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!title || !category || !description) {
-      toast.error('Title, Category, and Description are required!');
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('category', category);
-    formData.append('description', description);
-    if (image) formData.append('image', image); 
-    if (user?.email) formData.append('user', user.email);  
-  
-    setSending(true);
-  
-    try {
-      const response = await fetch('http://localhost:8000/digest/add', {
-        method: 'POST',
-        body: formData,
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok && data.message === 'Post created successfully!') {
-        toast.success('Post created successfully!');
-        setTitle('');
-        setCategory('');
-        setDescription('');
-        setImage(null);
-        setShowAddPost(false);
-      } else {
-        toast.error(data.message || 'Error creating post.');
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
       }
-    } catch (error) {
-      toast.error('Something went wrong while creating the post.');
-    } finally {
-      setSending(false);
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewImage(reader.result);
+      reader.readAsDataURL(file);
     }
   };
-  
-  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.title || !formData.category || !formData.description || !imageFile) {
+      toast.error('All fields including image are required, except link which is optional');
+      return;
+    }
+
+    if (!user?.id) {
+      toast.error('You must be logged in to create a post');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('username', user.id); // Using user.id as username
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('link', formData.link || '');
+      formDataToSend.append('image', imageFile);
+
+      const response = await fetch('http://localhost:8000/post/create', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create post');
+      }
+
+      toast.success('Post created successfully!');
+      setShowAddPost(false);
+      onPostCreated?.(data.post);
+      
+      setFormData({
+        username: user.name,
+        title: '',
+        category: '',
+        description: '',
+        link: ''
+      });
+      setImageFile(null);
+      setPreviewImage(null);
+
+    } catch (error) {
+      toast.error(error.message || 'Error creating post');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 bg-[#00000090] flex items-center justify-center z-50"
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="bg-white rounded-2xl w-[550px] max-w-[90vw] p-6 shadow-lg"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        className="bg-white rounded-lg shadow-xl w-full max-w-md"
       >
-        <div className="flex justify-between items-center mb-5">
-          <h2 className="text-xl font-bold text-sky-600">Create a Post</h2>
-          <X
-            size={26}
-            className="text-gray-600 hover:text-black cursor-pointer"
-            onClick={() => setShowAddPost(false)}
-          />
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-xl font-semibold">Create New Post</h2>
+          <button 
+            onClick={() => !isSubmitting && setShowAddPost(false)}
+            className={`text-gray-500 hover:text-gray-700 ${isSubmitting ? 'opacity-50' : ''}`}
+          >
+            <X size={24} />
+          </button>
         </div>
 
-        <form onSubmit={handlePostSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <label className="block text-sm font-medium mb-1">Title *</label>
             <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full py-2 px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-              placeholder="Post title"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
               required
             />
           </div>
 
+          {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium mb-1">Category *</label>
             <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full py-2 px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
               required
             >
-              <option value="">Select Category</option>
-              <option value="hackathon">Hackathon</option>
-              <option value="internship">Internship</option>
-              <option value="paper_presentation">Paper Presentation</option>
+              <option value="">Select category</option>
+              <option value="Hackathon">Hackathon</option>
+              <option value="Internship">Internship</option>
+              <option value="Paper Presentation">Paper Presentation</option>
             </select>
           </div>
 
+          {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1">Description *</label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full py-2 px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-              rows={5}
-              placeholder="Write your description..."
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              rows={4}
+              className="w-full p-2 border rounded"
               required
             />
           </div>
 
+          {/* Link (Optional) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image (Optional)</label>
-            <div className="relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files[0])}
-                id="image-upload"
-                className="hidden"
-              />
-              <label
-                htmlFor="image-upload"
-                className="w-full py-2 px-4 border border-gray-300 rounded-lg cursor-pointer hover:border-sky-500 flex justify-between items-center"
-              >
-                {image ? (
-                  <span className="text-gray-700 truncate">{image.name}</span>
+            <label className="block text-sm font-medium mb-1">Link (Optional)</label>
+            <input
+              name="link"
+              type="url"
+              value={formData.link}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Image *</label>
+            <div className="flex items-center gap-4">
+              <label className={`cursor-pointer ${!imageFile ? 'border-2 border-dashed p-2 rounded' : ''}`}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  required
+                />
+                {imageFile ? (
+                  <div className="relative">
+                    <img 
+                      src={previewImage} 
+                      alt="Preview" 
+                      className="w-32 h-32 object-cover rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImageFile(null);
+                        setPreviewImage(null);
+                      }}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
                 ) : (
-                  <span className="text-gray-500">Choose a file...</span>
+                  <span className="text-gray-500">Click to upload image</span>
                 )}
-                <span className="text-sky-600">Browse</span>
               </label>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={() => setShowAddPost(false)}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={sending}
-              className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
+              disabled={isSubmitting}
             >
-              {sending ? 'Posting...' : 'Post'}
+              {isSubmitting ? 'Creating...' : 'Create Post'}
             </button>
           </div>
         </form>

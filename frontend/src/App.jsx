@@ -42,6 +42,7 @@ const App = () => {
         <Route path='/reset-password' element={rPwdStatus ? <ResetPwd setOtpStatus={setOtpStatus} setFPwdStatus={setFPwdStatus} setRPwdStatus={setRPwdStatus} /> : <Error403 />} />  
         <Route path='/dashboard' element={token ? (user?.isFaculty ? <FacultyDashboard /> : <UserDashboard />) : <Navigate to='/login' replace />} />
         <Route path='/digests' element={token ? <DigestPage /> : <Navigate to='/login' replace />} />
+        <Route path='/digests/:id' element={token ? <DigestPage /> : <Navigate to='/login' replace />} />
         <Route path='/explore-projects' element={token ? <ExploreProjects /> : <Navigate to='/login' replace />} />
         <Route path='/projects' element={token ? <Projects /> : <Navigate to='/login' replace />} />
         <Route path='/project-dashboard/:id' element={token ? <ProjectsDashboard /> : <Navigate to='/login' replace />} />
