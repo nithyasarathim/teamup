@@ -7,7 +7,7 @@ import UserContext from '../../Context/UserContext';
 const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
   const { user } = useContext(UserContext);
   const [formData, setFormData] = useState({
-    username: user?.name || '', // Assuming user.id is the username
+    username: user?.username, 
     title: '',
     category: '',
     description: '',
@@ -53,7 +53,7 @@ const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('username', user.id); // Using user.id as username
+      formDataToSend.append('username', user.username);
       formDataToSend.append('title', formData.title);
       formDataToSend.append('category', formData.category);
       formDataToSend.append('description', formData.description);
@@ -76,7 +76,7 @@ const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
       onPostCreated?.(data.post);
       
       setFormData({
-        username: user.name,
+        username: user.username,
         title: '',
         category: '',
         description: '',
@@ -97,12 +97,12 @@ const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-[#00000090] bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <motion.div
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
-        className="bg-white rounded-lg shadow-xl w-full max-w-md"
+        className="bg-white rounded-lg shadow-xl w-full max-w-[50%]"
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">Create New Post</h2>
@@ -115,7 +115,6 @@ const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          {/* Title */}
           <div>
             <label className="block text-sm font-medium mb-1">Title *</label>
             <input
@@ -127,7 +126,6 @@ const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
             />
           </div>
 
-          {/* Category */}
           <div>
             <label className="block text-sm font-medium mb-1">Category *</label>
             <select
@@ -144,7 +142,6 @@ const AddPostModal = ({ setShowAddPost, onPostCreated }) => {
             </select>
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-medium mb-1">Description *</label>
             <textarea

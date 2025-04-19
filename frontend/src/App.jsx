@@ -15,6 +15,7 @@ import ProjectDiscussion from './pages/ProjectDiscussionPages/ProjectDiscussion'
 import Projects from './pages/ProjectDashboardPages/Projects.jsx';
 import UserContext from './Context/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
+import AccountDetailsPage from './pages/ProfilePages/AccountDetails.jsx';
 
 const App = () => {
   const [fPwdStatus, setFPwdStatus] = useState(false);
@@ -47,6 +48,7 @@ const App = () => {
         <Route path='/projects' element={token ? <Projects /> : <Navigate to='/login' replace />} />
         <Route path='/project-dashboard/:id' element={token ? <ProjectsDashboard /> : <Navigate to='/login' replace />} />
         <Route path='/discussion/:id' element={token ? <ProjectDiscussion/>:<Navigate to='/login' replace />} />
+        <Route path="/profile/:id" element={<AccountDetailsPage/>} />
         <Route path='/' element={<Navigate to='/dashboard' replace />} />
       </Routes>
     </Router>

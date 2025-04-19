@@ -80,7 +80,7 @@ const DigestDetails = ({ digest }) => {
       </div>
 
       {/* Content Section */}
-      <div className="w-full md:flex-1 bg-white rounded-2xl shadow-lg p-6">
+      <div className="no-scrollbar w-full md:flex-1 bg-white rounded-2xl shadow-lg p-6 max-h-[550px] overflow-y-auto">
         {/* Header */}
         <div className="border-b pb-4 mb-4">
           <h1 className="text-2xl font-bold text-gray-800">{currentDigest.title}</h1>

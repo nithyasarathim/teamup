@@ -32,7 +32,7 @@ const DigestList = ({ digests, setSelectedDigest, filterCategory, setFilterCateg
           </select>
         </div>
 
-        <div className='digest-list overflow-y-auto h-[85%] pr-1'>
+        <div className='digest-list w-[350px] overflow-y-auto h-[85%]  pr-1'>
           {digests.length > 0 ? (
             digests.map((digest) => (
               <div

@@ -10,7 +10,9 @@ const notifyRoutes = require('./Routers/notifyRoutes');
 const discussRoutes = require('./Routers/discussRoutes');
 const mailRoutes = require('./Routers/mailRoutes');
 const postRoutes = require('./Routers/postRoutes');
+const userRoutes = require('./Routers/userRoutes');
 const path = require('path')
+
 
 const { initializeSocket } = require('./socket');
 
@@ -28,6 +30,7 @@ app.use('/notify', notifyRoutes);
 app.use('/mail', mailRoutes);
 app.use('/discuss', discussRoutes);
 app.use('/post', postRoutes);
+app.use('/users', userRoutes);
 app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
 
 
